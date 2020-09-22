@@ -8,6 +8,7 @@ import 'package:flutter_auth/components/already_have_an_account_acheck.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
 import 'package:flutter_auth/components/rounded_inputname_field.dart';
 import 'package:flutter_auth/components/rounded_password_field.dart';
+import 'package:flutter_auth/components/text_field_container.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,6 +26,12 @@ class _SignInState extends State<SignIn> {
   TextEditingController emailEditingController = new TextEditingController();
   TextEditingController passwordEditingController = new TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _passwordVisible;
+
+  @override
+  void initState() {
+    _passwordVisible = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,63 +53,75 @@ class _SignInState extends State<SignIn> {
                 height: size.height * 0.35,
               ),
               SizedBox(height: size.height * 0.03),
-              TextFormField(
-                controller: emailEditingController,
-                validator: (emailValue) {
-                  if (emailValue.isEmpty) {
-                    return 'This field is mandatory';
-                  }
+              TextFieldContainer(
+                child: TextFormField(
+                  controller: emailEditingController,
+                  validator: (emailValue) {
+                    if (emailValue.isEmpty) {
+                      return 'This field is mandatory';
+                    }
 
-                  String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
-                      "\\@" +
-                      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-                      "(" +
-                      "\\." +
-                      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-                      ")+";
-                  RegExp regExp = new RegExp(p);
+                    String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                        "\\@" +
+                        "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                        "(" +
+                        "\\." +
+                        "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                        ")+";
+                    RegExp regExp = new RegExp(p);
 
-                  if (regExp.hasMatch(emailValue)) {
-                    // So, the email is valid
-                    return null;
-                  }
+                    if (regExp.hasMatch(emailValue)) {
+                      // So, the email is valid
+                      return null;
+                    }
 
-                  return 'This is not a valid email';
-                },
-                cursorColor: kPrimaryColor,
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.person,
-                    color: kPrimaryColor,
+                    return 'This is not a valid email';
+                  },
+                  cursorColor: kPrimaryColor,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.person,
+                      color: kPrimaryColor,
+                    ),
+                    hintText: "Your Email",
+                    border: InputBorder.none,
                   ),
-                  hintText: "Your Email",
-                  border: InputBorder.none,
                 ),
               ),
-              TextFormField(
-                controller: passwordEditingController,
-                validator: (pwValue) {
-                  if (pwValue.isEmpty) {
-                    return 'This field is mandatory';
-                  }
-                  if (pwValue.length < 6) {
-                    return 'Password must be at least 6 characters';
-                  }
+              TextFieldContainer(
+                child: TextFormField(
+                  controller: passwordEditingController,
+                  obscureText: !_passwordVisible,
+                  validator: (pwValue) {
+                    if (pwValue.isEmpty) {
+                      return 'This field is mandatory';
+                    }
+                    if (pwValue.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
 
-                  return null;
-                },
-                cursorColor: kPrimaryColor,
-                decoration: InputDecoration(
-                  hintText: "Password",
-                  icon: Icon(
-                    Icons.lock,
-                    color: kPrimaryColor,
+                    return null;
+                  },
+                  cursorColor: kPrimaryColor,
+                  decoration: InputDecoration(
+                    hintText: "Password",
+                    icon: Icon(
+                      Icons.lock,
+                      color: kPrimaryColor,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        Icons.visibility,
+                        color: kPrimaryColor,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
+                    border: InputBorder.none,
                   ),
-                  suffixIcon: Icon(
-                    Icons.visibility,
-                    color: kPrimaryColor,
-                  ),
-                  border: InputBorder.none,
                 ),
               ),
               RoundedButton(

@@ -33,11 +33,12 @@ class _SignUpState extends State<SignUp> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   bool isLoggedin = false;
   bool isloading = false;
+  bool _passwordVisible;
 
   @override
   void initState() {
     super.initState();
-
+    _passwordVisible = false;
     isSignedIn();
   }
 
@@ -207,7 +208,7 @@ class _SignUpState extends State<SignUp> {
                 TextFieldContainer(
                   child: TextFormField(
                     controller: passwordEditingController,
-                    obscureText: true,
+                    obscureText: !_passwordVisible,
                     validator: (pwValue) {
                       if (pwValue.isEmpty) {
                         return 'This field is mandatory';
@@ -225,9 +226,16 @@ class _SignUpState extends State<SignUp> {
                         Icons.lock,
                         color: kPrimaryColor,
                       ),
-                      suffixIcon: Icon(
-                        Icons.visibility,
-                        color: kPrimaryColor,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          Icons.visibility,
+                          color: kPrimaryColor,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        },
                       ),
                       border: InputBorder.none,
                     ),
