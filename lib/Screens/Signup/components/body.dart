@@ -14,6 +14,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../components/text_field_container.dart';
+import '../../../components/text_field_container.dart';
+import '../../../components/text_field_container.dart';
+
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
@@ -96,85 +100,91 @@ class _SignUpState extends State<SignUp> {
               "assets/icons/signup.svg",
               height: size.height * 0.35,
             ),
-            TextFormField(
-              controller: nameEditingController,
-              validator: (val) {
-                return val.isEmpty || val.length < 3
-                    ? "Enter Username 3+ characters"
-                    : null;
-              },
-              cursorColor: kPrimaryColor,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.person,
-                  color: kPrimaryColor,
+            TextFieldContainer(
+              child: TextFormField(
+                controller: nameEditingController,
+                validator: (val) {
+                  return val.isEmpty || val.length < 3
+                      ? "Enter Username 3+ characters"
+                      : null;
+                },
+                cursorColor: kPrimaryColor,
+                decoration: InputDecoration(
+                  icon: Icon(
+                    Icons.person,
+                    color: kPrimaryColor,
+                  ),
+                  hintText: "Your Name",
+                  border: InputBorder.none,
                 ),
-                hintText: "Your Name",
-                border: InputBorder.none,
               ),
             ),
-            TextFormField(
-              controller: emailEditingController,
-              validator: (emailValue) {
-                if (emailValue.isEmpty) {
-                  return 'This field is mandatory';
-                }
+            TextFieldContainer(
+              child: TextFormField(
+                controller: emailEditingController,
+                validator: (emailValue) {
+                  if (emailValue.isEmpty) {
+                    return 'This field is mandatory';
+                  }
 
-                String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
-                    "\\@" +
-                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-                    "(" +
-                    "\\." +
-                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-                    ")+";
-                RegExp regExp = new RegExp(p);
+                  String p = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+                      "\\@" +
+                      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                      "(" +
+                      "\\." +
+                      "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                      ")+";
+                  RegExp regExp = new RegExp(p);
 
-                if (regExp.hasMatch(emailValue)) {
-                  // So, the email is valid
+                  if (regExp.hasMatch(emailValue)) {
+                    // So, the email is valid
+                    return null;
+                  }
+
+                  return 'This is not a valid email';
+                },
+                cursorColor: kPrimaryColor,
+                decoration: InputDecoration(
+                  icon: Icon(
+                    Icons.email,
+                    color: kPrimaryColor,
+                  ),
+                  hintText: "Your Email",
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            TextFieldContainer(
+              child: TextFormField(
+                controller: passwordEditingController,
+                obscureText: true,
+                validator: (pwValue) {
+                  if (pwValue.isEmpty) {
+                    return 'This field is mandatory';
+                  }
+                  if (pwValue.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+
                   return null;
-                }
-
-                return 'This is not a valid email';
-              },
-              cursorColor: kPrimaryColor,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.person,
-                  color: kPrimaryColor,
+                },
+                cursorColor: kPrimaryColor,
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  icon: Icon(
+                    Icons.lock,
+                    color: kPrimaryColor,
+                  ),
+                  suffixIcon: Icon(
+                    Icons.visibility,
+                    color: kPrimaryColor,
+                  ),
+                  border: InputBorder.none,
                 ),
-                hintText: "Your Email",
-                border: InputBorder.none,
-              ),
-            ),
-            TextFormField(
-              controller: passwordEditingController,
-              obscureText: true,
-              validator: (pwValue) {
-                if (pwValue.isEmpty) {
-                  return 'This field is mandatory';
-                }
-                if (pwValue.length < 6) {
-                  return 'Password must be at least 6 characters';
-                }
-
-                return null;
-              },
-              cursorColor: kPrimaryColor,
-              decoration: InputDecoration(
-                hintText: "Password",
-                icon: Icon(
-                  Icons.lock,
-                  color: kPrimaryColor,
-                ),
-                suffixIcon: Icon(
-                  Icons.visibility,
-                  color: kPrimaryColor,
-                ),
-                border: InputBorder.none,
               ),
             ),
             RoundedButton(
-              text: "SIGNUP",
+              text: "SIGN UP",
               press: () {
                 _registeruser();
               },
@@ -193,24 +203,24 @@ class _SignUpState extends State<SignUp> {
                 );
               },
             ),
-            OrDivider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SocalIcon(
-                  iconSrc: "assets/icons/facebook.svg",
-                  press: () {},
-                ),
-                SocalIcon(
-                  iconSrc: "assets/icons/twitter.svg",
-                  press: () {},
-                ),
-                SocalIcon(
-                  iconSrc: "assets/icons/google-plus.svg",
-                  press: () {},
-                ),
-              ],
-            )
+            // OrDivider(),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: <Widget>[
+            //     SocalIcon(
+            //       iconSrc: "assets/icons/facebook.svg",
+            //       press: () {},
+            //     ),
+            //     SocalIcon(
+            //       iconSrc: "assets/icons/twitter.svg",
+            //       press: () {},
+            //     ),
+            //     SocalIcon(
+            //       iconSrc: "assets/icons/google-plus.svg",
+            //       press: () {},
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),
