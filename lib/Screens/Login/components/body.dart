@@ -1,17 +1,16 @@
+import 'package:ChatApp/Screens/HomeScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Models/user.dart';
-import 'package:flutter_auth/Screens/Login/components/background.dart';
-import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
-import 'package:flutter_auth/components/already_have_an_account_acheck.dart';
-import 'package:flutter_auth/components/rounded_button.dart';
-import 'package:flutter_auth/components/rounded_inputname_field.dart';
-import 'package:flutter_auth/components/rounded_password_field.dart';
-import 'package:flutter_auth/components/text_field_container.dart';
+import 'package:ChatApp/Screens/Login/components/background.dart';
+import 'package:ChatApp/Screens/Signup/signup_screen.dart';
+import 'package:ChatApp/components/already_have_an_account_acheck.dart';
+import 'package:ChatApp/components/rounded_button.dart';
+import 'package:ChatApp/components/text_field_container.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ChatApp/widgets/Progresswidget.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -27,6 +26,7 @@ class _SignInState extends State<SignIn> {
   TextEditingController passwordEditingController = new TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   bool _passwordVisible;
+  bool isloading = false;
 
   @override
   void initState() {
@@ -125,9 +125,16 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
               RoundedButton(
-                text: "LOGIN",
+                child: isloading
+                    ? circularprogress()
+                    : Text(
+                        "LOGIN",
+                        style: TextStyle(color: Colors.white),
+                      ),
                 press: () {
-                  loginUser();
+                  if (_formkey.currentState.validate()) {
+                    loginUser();
+                  }
                 },
               ),
               SizedBox(height: size.height * 0.03),
@@ -151,6 +158,11 @@ class _SignInState extends State<SignIn> {
   }
 
   void loginUser() async {
+    this.setState(() {
+      isloading = true;
+    });
+    preferences = await SharedPreferences.getInstance();
+
     FirebaseUser firebaseUser;
 
     await _auth
@@ -160,22 +172,27 @@ class _SignInState extends State<SignIn> {
         .then((auth) {
       firebaseUser = auth.user;
     }).catchError((err) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error"),
-              content: Text(err.message),
-              actions: [
-                FlatButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
+      this.setState(() {
+        isloading = false;
+      });
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(err.message)));
+
+      // showDialog(
+      //     context: context,
+      //     builder: (BuildContext context) {
+      //       return AlertDialog(
+      //         title: Text("Error"),
+      //         content: Text(err.message),
+      //         actions: [
+      //           FlatButton(
+      //             child: Text("Ok"),
+      //             onPressed: () {
+      //               Navigator.of(context).pop();
+      //             },
+      //           )
+      //         ],
+      //       );
+      //     });
     });
 
     if (firebaseUser != null) {
@@ -184,13 +201,25 @@ class _SignInState extends State<SignIn> {
           .document(firebaseUser.uid)
           .get()
           .then((datasnapshot) async {
-        await preferences.setString("uid", datasnapshot.data[firebaseUser.uid]);
-        await preferences.setString(
-            "name", datasnapshot.data[firebaseUser.displayName]);
-        await preferences.setString(
-            "photo", datasnapshot.data[firebaseUser.photoUrl]);
+        await preferences.setString("uid", datasnapshot.data["uid"]);
+        await preferences.setString("name", datasnapshot.data["name"]);
+        await preferences.setString("photo", datasnapshot.data["photo"]);
+
+        this.setState(() {
+          isloading = false;
+        });
+
+        Navigator.pop(context);
+        Route route = MaterialPageRoute(
+            builder: (c) => HomeScreen(
+                  currentuserid: firebaseUser.uid,
+                ));
+        Navigator.pushReplacement(context, route);
       });
     } else {
+      this.setState(() {
+        isloading = false;
+      });
       Fluttertoast.showToast(msg: "Sign in Failed");
     }
   }

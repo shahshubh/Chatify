@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/constants.dart';
+import 'package:ChatApp/constants.dart';
 
 class RoundedButton extends StatelessWidget {
   final String text;
   final Function press;
+  final Widget child;
   final Color color, textColor;
   const RoundedButton({
     Key key,
+    this.child,
     this.text,
     this.press,
     this.color = kPrimaryColor,
@@ -25,10 +27,11 @@ class RoundedButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
           color: color,
           onPressed: press,
-          child: Text(
-            text,
-            style: TextStyle(color: textColor),
-          ),
+          child: child,
+          // child: Text(
+          //   text,
+          //   style: TextStyle(color: textColor),
+          // ),
         ),
       ),
     );

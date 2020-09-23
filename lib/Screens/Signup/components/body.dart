@@ -1,21 +1,16 @@
+import 'package:ChatApp/widgets/Progresswidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/HomeScreen.dart';
-import 'package:flutter_auth/Screens/Login/login_screen.dart';
-import 'package:flutter_auth/Screens/Signup/components/background.dart';
-import 'package:flutter_auth/Screens/Signup/components/or_divider.dart';
-import 'package:flutter_auth/Screens/Signup/components/social_icon.dart';
-import 'package:flutter_auth/components/already_have_an_account_acheck.dart';
-import 'package:flutter_auth/components/rounded_button.dart';
-import 'package:flutter_auth/components/rounded_inputname_field.dart';
-import 'package:flutter_auth/components/rounded_password_field.dart';
+import 'package:ChatApp/Screens/HomeScreen.dart';
+import 'package:ChatApp/Screens/Login/login_screen.dart';
+import 'package:ChatApp/Screens/Signup/components/background.dart';
+import 'package:ChatApp/components/already_have_an_account_acheck.dart';
+import 'package:ChatApp/components/rounded_button.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../components/text_field_container.dart';
-import '../../../components/text_field_container.dart';
 import '../../../components/text_field_container.dart';
 
 class SignUp extends StatefulWidget {
@@ -39,28 +34,12 @@ class _SignUpState extends State<SignUp> {
   void initState() {
     super.initState();
     _passwordVisible = false;
-    isSignedIn();
-  }
-
-  void isSignedIn() async {
-    this.setState(() {
-      isLoggedin = true;
-    });
-    preferences = await SharedPreferences.getInstance();
-    await FirebaseAuth.instance.currentUser().then((user) {
-      if (user != null) {
-        Route route = MaterialPageRoute(
-            builder: (c) =>
-                HomeScreen(currentuserid: preferences.getString("uid")));
-        Navigator.pushReplacement(context, route);
-      }
-      this.setState(() {
-        isloading = false;
-      });
-    });
   }
 
   void _registeruser() async {
+    this.setState(() {
+      isloading = true;
+    });
     preferences = await SharedPreferences.getInstance();
     FirebaseUser firebaseUser;
 
@@ -71,25 +50,17 @@ class _SignUpState extends State<SignUp> {
         .then((auth) {
       firebaseUser = auth.user;
     }).catchError((err) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error"),
-              content: Text(err.message),
-              actions: [
-                FlatButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
+      this.setState(() {
+        isloading = false;
+      });
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(err.message)));
     });
 
     if (firebaseUser != null) {
+      // UserUpdateInfo updateUser = UserUpdateInfo();
+      // updateUser.displayName = nameEditingController.text;
+      // firebaseUser.updateProfile(updateUser);
+
       final QuerySnapshot result = await Firestore.instance
           .collection("Users")
           .where("uid", isEqualTo: firebaseUser.uid)
@@ -107,11 +78,13 @@ class _SignUpState extends State<SignUp> {
           "photo": firebaseUser.photoUrl,
         });
         FirebaseUser currentuser = firebaseUser;
+        print(currentuser);
+        print(currentuser.uid);
         await preferences.setString("uid", currentuser.uid);
         await preferences.setString("name", currentuser.displayName);
         await preferences.setString("photo", currentuser.photoUrl);
       } else {
-        FirebaseUser currentuser = firebaseUser;
+        // FirebaseUser currentuser = firebaseUser;
         await preferences.setString("uid", documents[0]["uid"]);
         await preferences.setString("name", documents[0]["name"]);
         await preferences.setString("photo", documents[0]["photo"]);
@@ -121,13 +94,15 @@ class _SignUpState extends State<SignUp> {
         isloading = false;
       });
       Navigator.pop(context);
-      print(firebaseUser);
       Route route = MaterialPageRoute(
           builder: (c) => HomeScreen(
                 currentuserid: firebaseUser.uid,
               ));
       Navigator.pushReplacement(context, route);
     } else {
+      this.setState(() {
+        isloading = false;
+      });
       Fluttertoast.showToast(msg: "Sign in Failed");
     }
   }
@@ -242,9 +217,16 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
                 RoundedButton(
-                  text: "SIGN UP",
+                  child: isloading
+                      ? circularprogress()
+                      : Text(
+                          "SIGN UP",
+                          style: TextStyle(color: Colors.white),
+                        ),
                   press: () {
-                    _registeruser();
+                    if (_formkey.currentState.validate()) {
+                      _registeruser();
+                    }
                   },
                 ),
                 SizedBox(height: size.height * 0.03),
@@ -261,24 +243,6 @@ class _SignUpState extends State<SignUp> {
                     );
                   },
                 ),
-                // OrDivider(),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: <Widget>[
-                //     SocalIcon(
-                //       iconSrc: "assets/icons/facebook.svg",
-                //       press: () {},
-                //     ),
-                //     SocalIcon(
-                //       iconSrc: "assets/icons/twitter.svg",
-                //       press: () {},
-                //     ),
-                //     SocalIcon(
-                //       iconSrc: "assets/icons/google-plus.svg",
-                //       press: () {},
-                //     ),
-                //   ],
-                // )
               ]),
         ),
       ),

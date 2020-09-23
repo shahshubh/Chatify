@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 circularprogress() {
-  return Container(
-    alignment: Alignment.center,
-    padding: EdgeInsets.only(top: 12.0),
+  return SizedBox(
     child: CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation(Colors.lightBlueAccent),
+      valueColor: AlwaysStoppedAnimation(Colors.white),
     ),
+    height: 20.0,
+    width: 20.0,
   );
 }
 

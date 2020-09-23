@@ -1,13 +1,42 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/Login/login_screen.dart';
-import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
-import 'package:flutter_auth/Screens/Welcome/components/background.dart';
-import 'package:flutter_auth/components/rounded_button.dart';
-import 'package:flutter_auth/constants.dart';
+import 'package:ChatApp/Screens/Login/login_screen.dart';
+import 'package:ChatApp/Screens/Signup/signup_screen.dart';
+import 'package:ChatApp/Screens/Welcome/components/background.dart';
+import 'package:ChatApp/components/rounded_button.dart';
+import 'package:ChatApp/constants.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_auth/widgets/Progresswidget.dart';
+import 'package:ChatApp/widgets/Progresswidget.dart';
 
-class Body extends StatelessWidget {
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../HomeScreen.dart';
+
+class Body extends StatefulWidget {
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  SharedPreferences preferences;
+
+  void initState() {
+    super.initState();
+    isSignedIn();
+  }
+
+  void isSignedIn() async {
+    preferences = await SharedPreferences.getInstance();
+    await FirebaseAuth.instance.currentUser().then((user) {
+      if (user != null) {
+        Route route = MaterialPageRoute(
+            builder: (c) =>
+                HomeScreen(currentuserid: preferences.getString("uid")));
+        Navigator.pushReplacement(context, route);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -28,7 +57,10 @@ class Body extends StatelessWidget {
             ),
             SizedBox(height: size.height * 0.05),
             RoundedButton(
-              text: "LOGIN",
+              child: Text(
+                "LOGIN",
+                style: TextStyle(color: Colors.white),
+              ),
               press: () {
                 Navigator.push(
                   context,
@@ -41,7 +73,10 @@ class Body extends StatelessWidget {
               },
             ),
             RoundedButton(
-              text: "SIGN UP",
+              child: Text(
+                "SIGN UP",
+                style: TextStyle(color: Colors.black),
+              ),
               color: kPrimaryLightColor,
               textColor: Colors.black,
               press: () {
@@ -55,10 +90,10 @@ class Body extends StatelessWidget {
                 );
               },
             ),
-            Padding(
-              padding: EdgeInsets.all(1.0),
-              child: circularprogress(),
-            )
+            // Padding(
+            //   padding: EdgeInsets.all(1.0),
+            //   child: circularprogress(),
+            // )
           ],
         ),
       ),

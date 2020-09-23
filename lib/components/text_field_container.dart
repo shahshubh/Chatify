@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/constants.dart';
+import 'package:ChatApp/constants.dart';
 
 class TextFieldContainer extends StatelessWidget {
   final Widget child;

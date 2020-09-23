@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/Welcome/welcome_screen.dart';
+import 'package:ChatApp/Screens/Welcome/welcome_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String currentuserid;
