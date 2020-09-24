@@ -28,6 +28,13 @@ dependencies:
   cloud_firestore: ^0.12.9+5
   shared_preferences: ^0.5.3+4
   fluttertoast: ^7.1.1
+  image_picker: ^0.6.4
+  firebase_storage: ^3.0.6
+  cached_network_image: 2.0.0-rc.1
+  intl: ^0.15.7
+  firebase_messaging: 6.0.13
+  flutter_local_notifications: 1.4.0
+  photo_view: ^0.5.0
 
 dev_dependencies:
   flutter_test:

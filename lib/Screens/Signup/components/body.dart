@@ -57,10 +57,6 @@ class _SignUpState extends State<SignUp> {
     });
 
     if (firebaseUser != null) {
-      // UserUpdateInfo updateUser = UserUpdateInfo();
-      // updateUser.displayName = nameEditingController.text;
-      // firebaseUser.updateProfile(updateUser);
-
       final QuerySnapshot result = await Firestore.instance
           .collection("Users")
           .where("uid", isEqualTo: firebaseUser.uid)
@@ -74,20 +70,23 @@ class _SignUpState extends State<SignUp> {
             .setData({
           "uid": firebaseUser.uid,
           "email": firebaseUser.email,
-          "name": nameEditingController.text.trim(),
-          "photo": firebaseUser.photoUrl,
+          "name": nameEditingController.text,
+          "photoUrl": firebaseUser.photoUrl,
+          "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
+          "chattingWith": null,
         });
         FirebaseUser currentuser = firebaseUser;
-        print(currentuser);
-        print(currentuser.uid);
+
         await preferences.setString("uid", currentuser.uid);
-        await preferences.setString("name", currentuser.displayName);
+        await preferences.setString("name", nameEditingController.text);
         await preferences.setString("photo", currentuser.photoUrl);
+        await preferences.setString("email", currentuser.email);
       } else {
         // FirebaseUser currentuser = firebaseUser;
         await preferences.setString("uid", documents[0]["uid"]);
         await preferences.setString("name", documents[0]["name"]);
-        await preferences.setString("photo", documents[0]["photo"]);
+        await preferences.setString("photo", documents[0]["photoUrl"]);
+        await preferences.setString("email", documents[0]["email"]);
       }
 
       this.setState(() {
@@ -103,7 +102,7 @@ class _SignUpState extends State<SignUp> {
       this.setState(() {
         isloading = false;
       });
-      Fluttertoast.showToast(msg: "Sign in Failed");
+      Fluttertoast.showToast(msg: "Sign up Failed");
     }
   }
 

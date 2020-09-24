@@ -96,9 +96,9 @@ class _SignInState extends State<SignIn> {
                     if (pwValue.isEmpty) {
                       return 'This field is mandatory';
                     }
-                    if (pwValue.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
+                    // if (pwValue.length < 6) {
+                    //   return 'Password must be at least 6 characters';
+                    // }
 
                     return null;
                   },
@@ -203,7 +203,8 @@ class _SignInState extends State<SignIn> {
           .then((datasnapshot) async {
         await preferences.setString("uid", datasnapshot.data["uid"]);
         await preferences.setString("name", datasnapshot.data["name"]);
-        await preferences.setString("photo", datasnapshot.data["photo"]);
+        await preferences.setString("photo", datasnapshot.data["photoUrl"]);
+        await preferences.setString("email", datasnapshot.data["email"]);
 
         this.setState(() {
           isloading = false;
@@ -220,7 +221,7 @@ class _SignInState extends State<SignIn> {
       this.setState(() {
         isloading = false;
       });
-      Fluttertoast.showToast(msg: "Sign in Failed");
+      Fluttertoast.showToast(msg: "Login Failed");
     }
   }
 }

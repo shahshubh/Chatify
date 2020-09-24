@@ -27,6 +27,7 @@ class _BodyState extends State<Body> {
 
   void isSignedIn() async {
     preferences = await SharedPreferences.getInstance();
+
     await FirebaseAuth.instance.currentUser().then((user) {
       if (user != null) {
         Route route = MaterialPageRoute(
