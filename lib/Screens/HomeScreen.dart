@@ -1,4 +1,5 @@
 import 'package:ChatApp/Screens/AccountSettingsPage.dart';
+import 'package:ChatApp/Screens/ChattingPage.dart';
 import 'package:ChatApp/Widgets/ProgressWidget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -167,6 +168,7 @@ class UserResult extends StatelessWidget {
         child: Column(
           children: <Widget>[
             GestureDetector(
+              onTap: () => sendUserToChatPage(context),
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Colors.black,
@@ -197,5 +199,15 @@ class UserResult extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  sendUserToChatPage(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Chat(
+                receiverId: eachUser.uid,
+                receiverAvatar: eachUser.photoUrl,
+                receiverName: eachUser.name)));
   }
 }

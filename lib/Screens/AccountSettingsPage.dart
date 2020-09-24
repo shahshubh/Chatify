@@ -6,7 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/Widgets/ProgressWidget.dart';
 import 'package:ChatApp/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -50,6 +49,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   String defaultPhotoUrl =
       "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
   File imageFileAvatar;
+  final picker = ImagePicker();
   bool isLoading = false;
   final FocusNode nameFocusNode = FocusNode();
   final FocusNode emailFocusNode = FocusNode();
@@ -74,14 +74,13 @@ class SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future getImage() async {
-    File newImageFile =
-        await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (newImageFile != null) {
-      setState(() {
-        this.imageFileAvatar = newImageFile;
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        imageFileAvatar = File(pickedFile.path);
         isLoading = true;
-      });
-    }
+      }
+    });
 
     // upload image to firebase storage
     uploadImageToFirestoreAndStorage();
