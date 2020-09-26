@@ -6,12 +6,9 @@ import 'package:ChatApp/Widgets/ProgressWidget.dart';
 import 'package:ChatApp/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/Screens/Welcome/welcome_screen.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:ChatApp/Models/user.dart';
 
@@ -238,11 +235,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chat App'),
-        backgroundColor: kPrimaryColor,
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Chat App'),
+      //   backgroundColor: kPrimaryColor,
+      //   centerTitle: true,
+      // ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),

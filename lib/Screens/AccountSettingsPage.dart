@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:ChatApp/Screens/Welcome/welcome_screen.dart';
 import 'package:ChatApp/Widgets/ProgressWidget.dart';
+import 'package:ChatApp/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,17 +17,18 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   iconTheme: IconThemeData(
-      //     color: Colors.white,
-      //   ),
-      //   backgroundColor: Color(0xFF6F35A5),
-      //   title: Text(
-      //     "Account Settings",
-      //     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      //   ),
-      //   centerTitle: true,
-      // ),
+      appBar: AppBar(
+        // iconTheme: IconThemeData(
+        //   color: Colors.white,
+        // ),
+        title: Text("Account Settings"),
+        backgroundColor: kPrimaryColor,
+        // title: Text(
+        //   "Account Settings",
+        //   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        // ),
+        centerTitle: true,
+      ),
       body: SettingsScreen(),
     );
   }
