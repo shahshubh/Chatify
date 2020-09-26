@@ -1,6 +1,9 @@
 import 'package:ChatApp/Screens/AccountSettingsPage.dart';
+import 'package:ChatApp/Screens/Chats.dart';
 import 'package:ChatApp/Screens/ChattingPage.dart';
+import 'package:ChatApp/Screens/UserList.dart';
 import 'package:ChatApp/Widgets/ProgressWidget.dart';
+import 'package:ChatApp/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +29,17 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchTextEditingController = TextEditingController();
   Future<QuerySnapshot> futureSearchResults;
   final String currentuserid;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // appBar: homePageHeader(),
+      // body: futureSearchResults == null
+      //     ? displayNosearchResultScreen()
+      //     : displayUserFoundScreen(),
+      body: MyStatefulWidget(),
+    );
+  }
 
   homePageHeader() {
     return AppBar(
@@ -90,16 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   emptyTextFormField() {
     searchTextEditingController.clear();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: homePageHeader(),
-      body: futureSearchResults == null
-          ? displayNosearchResultScreen()
-          : displayUserFoundScreen(),
-    );
   }
 
   displayUserFoundScreen() {
@@ -209,5 +213,60 @@ class UserResult extends StatelessWidget {
                 receiverId: eachUser.uid,
                 receiverAvatar: eachUser.photoUrl,
                 receiverName: eachUser.name)));
+  }
+}
+
+class MyStatefulWidget extends StatefulWidget {
+  MyStatefulWidget({Key key}) : super(key: key);
+
+  @override
+  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  List<Widget> _widgetOptions = <Widget>[ChatsPage(), UserList(), Settings()];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chat App'),
+        backgroundColor: kPrimaryColor,
+        centerTitle: true,
+      ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            title: Text('Chats'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.supervised_user_circle),
+            title: Text('Users'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            title: Text('Profile'),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: kPrimaryColor,
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+        onTap: _onItemTapped,
+      ),
+    );
   }
 }
