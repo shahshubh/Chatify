@@ -16,17 +16,17 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        backgroundColor: Color(0xFF6F35A5),
-        title: Text(
-          "Account Settings",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   iconTheme: IconThemeData(
+      //     color: Colors.white,
+      //   ),
+      //   backgroundColor: Color(0xFF6F35A5),
+      //   title: Text(
+      //     "Account Settings",
+      //     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   ),
+      //   centerTitle: true,
+      // ),
       body: SettingsScreen(),
     );
   }
