@@ -25,8 +25,8 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Container(
-            child: Text("User details not found"),
-          );
+              // child: Text("User details not found"),
+              );
         } else {
           return InkWell(
             onTap: () {
