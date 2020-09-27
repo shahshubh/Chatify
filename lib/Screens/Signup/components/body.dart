@@ -1,6 +1,7 @@
 import 'package:ChatApp/widgets/Progresswidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:ChatApp/Screens/HomeScreen.dart';
 import 'package:ChatApp/Screens/Login/login_screen.dart';
@@ -21,6 +22,8 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   static const kPrimaryColor = Color(0xFF6F35A5);
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final FirebaseMessaging _messaging = FirebaseMessaging();
+  String fcmToken;
   TextEditingController nameEditingController = new TextEditingController();
   TextEditingController emailEditingController = new TextEditingController();
   TextEditingController passwordEditingController = new TextEditingController();
@@ -34,6 +37,10 @@ class _SignUpState extends State<SignUp> {
   void initState() {
     super.initState();
     _passwordVisible = false;
+
+    _messaging.getToken().then((value) {
+      fcmToken = value;
+    });
   }
 
   void _registeruser() async {
@@ -78,6 +85,7 @@ class _SignUpState extends State<SignUp> {
           "chattingWith": null,
           "state": 1,
           "lastSeen": DateTime.now().millisecondsSinceEpoch.toString(),
+          "fcmToken": fcmToken
         });
         FirebaseUser currentuser = firebaseUser;
 

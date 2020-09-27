@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:ChatApp/components/chat_detail_page_appbar.dart';
@@ -13,6 +14,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class Chat extends StatelessWidget {
   final String receiverId;
@@ -49,7 +51,10 @@ class Chat extends StatelessWidget {
           receiverName: receiverName,
           receiverAvatar: receiverAvatar,
           receiverId: receiverId),
-      body: ChatScreen(receiverId: receiverId, receiverAvatar: receiverAvatar),
+      body: ChatScreen(
+        receiverId: receiverId,
+        receiverAvatar: receiverAvatar,
+      ),
     );
   }
 }
@@ -57,20 +62,28 @@ class Chat extends StatelessWidget {
 class ChatScreen extends StatefulWidget {
   final String receiverId;
   final String receiverAvatar;
-  ChatScreen(
-      {Key key, @required this.receiverId, @required this.receiverAvatar})
-      : super(key: key);
+  ChatScreen({
+    Key key,
+    @required this.receiverId,
+    @required this.receiverAvatar,
+  }) : super(key: key);
 
   @override
-  State createState() =>
-      ChatScreenState(receiverId: receiverId, receiverAvatar: receiverAvatar);
+  State createState() => ChatScreenState(
+        receiverId: receiverId,
+        receiverAvatar: receiverAvatar,
+      );
 }
 
 class ChatScreenState extends State<ChatScreen> {
   final String receiverId;
   final String receiverAvatar;
-  ChatScreenState(
-      {Key key, @required this.receiverId, @required this.receiverAvatar});
+
+  ChatScreenState({
+    Key key,
+    @required this.receiverId,
+    @required this.receiverAvatar,
+  });
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
@@ -85,6 +98,8 @@ class ChatScreenState extends State<ChatScreen> {
   String chatId;
   String id;
   SharedPreferences preferences;
+
+  String recieverFcmToken;
 
   var listMessage;
 
@@ -101,6 +116,17 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   readLocal() async {
+    Firestore.instance
+        .collection("Users")
+        .document(receiverId)
+        .get()
+        .then((datasnapshot) {
+      print(datasnapshot.data["name"]);
+      print(datasnapshot.data["fcmToken"]);
+      setState(() {
+        recieverFcmToken = datasnapshot.data["fcmToken"];
+      });
+    });
     preferences = await SharedPreferences.getInstance();
     id = preferences.getString("uid") ?? "";
     if (id.hashCode <= receiverId.hashCode) {
@@ -114,6 +140,46 @@ class ChatScreenState extends State<ChatScreen> {
         .document(id)
         .updateData({'chattingWith': receiverId});
     setState(() {});
+  }
+
+  Future<bool> callOnFcmApiSendPushNotifications(
+      String userToken, String body) async {
+    print("SENDING PUSH NOTIFICATION");
+    final postUrl = 'https://fcm.googleapis.com/fcm/send';
+    final data = {
+      "notification": {
+        "body": "$body",
+        "title": "${preferences.getString('name')}"
+      },
+      "priority": "high",
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        "id": "1",
+        "status": "done"
+      },
+      "to": "$userToken"
+    };
+
+    final headers = {
+      'content-type': 'application/json',
+      'Authorization':
+          "key=AAAAeXmVt7g:APA91bFMfbZftiYhpPWy3OdQ-XoMYm8f7BEOuNblHFpueqFRqoPmoTVUH3UrfUPI5d22bshwQKuPCqT0LB3gxfzAkf5cqpaxSEvfRtPHt7SWpbLt9FOACfa55J0dGHlP62RQRpgf9sJ6" // 'key=YOUR_SERVER_KEY'
+    };
+
+    final response = await http.post(postUrl,
+        body: jsonEncode(data),
+        // encoding: Encoding.getByName('utf-8'),
+        headers: headers);
+
+    if (response.statusCode == 200) {
+      // on success do sth
+      print('test ok push CFM');
+      return true;
+    } else {
+      print(' CFM error');
+      // on failure do sth
+      return false;
+    }
   }
 
   onFocusChange() {
@@ -674,7 +740,11 @@ class ChatScreenState extends State<ChatScreen> {
     //type=0 => text Msg
     //type=1 => Image File
     //type=2 => Sticker
+
     if (contentMsg != "") {
+      String body = type == 0 ? contentMsg : type == 1 ? "Image" : "GIF";
+
+      callOnFcmApiSendPushNotifications(recieverFcmToken, body);
       textEditingController.clear();
 
       Firestore.instance
