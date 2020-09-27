@@ -2,7 +2,6 @@ import 'package:ChatApp/Screens/AccountSettingsPage.dart';
 import 'package:ChatApp/Screens/Chats.dart';
 import 'package:ChatApp/Screens/ChattingPage.dart';
 import 'package:ChatApp/Screens/UserList.dart';
-import 'package:ChatApp/Widgets/ProgressWidget.dart';
 import 'package:ChatApp/constants.dart';
 import 'package:ChatApp/enum/user_state.dart';
 import 'package:ChatApp/resources/user_state_methods.dart';

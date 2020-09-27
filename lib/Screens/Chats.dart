@@ -62,8 +62,9 @@ class _ChatsPageState extends State<ChatsPage> {
     QuerySnapshot querySnapshot =
         await Firestore.instance.collection("Users").getDocuments();
 
-    allUsersWithDetails = querySnapshot.documents;
-    setState(() {});
+    setState(() {
+      allUsersWithDetails = querySnapshot.documents;
+    });
   }
 
   @override

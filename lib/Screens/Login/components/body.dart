@@ -1,6 +1,7 @@
 import 'package:ChatApp/Screens/HomeScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:ChatApp/Screens/Login/components/background.dart';
 import 'package:ChatApp/Screens/Signup/signup_screen.dart';
@@ -22,6 +23,8 @@ class _SignInState extends State<SignIn> {
 
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   static const kPrimaryColor = Color(0xFF6F35A5);
+  final FirebaseMessaging _messaging = FirebaseMessaging();
+  String fcmToken;
   TextEditingController emailEditingController = new TextEditingController();
   TextEditingController passwordEditingController = new TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -31,6 +34,9 @@ class _SignInState extends State<SignIn> {
   @override
   void initState() {
     _passwordVisible = false;
+    _messaging.getToken().then((value) {
+      fcmToken = value;
+    });
   }
 
   @override
@@ -196,6 +202,11 @@ class _SignInState extends State<SignIn> {
     });
 
     if (firebaseUser != null) {
+      Firestore.instance
+          .collection("Users")
+          .document(firebaseUser.uid)
+          .updateData({"fcmToken": fcmToken});
+
       Firestore.instance
           .collection("Users")
           .document(firebaseUser.uid)
