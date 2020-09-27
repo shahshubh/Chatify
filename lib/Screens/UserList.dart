@@ -79,13 +79,14 @@ class _UserListState extends State<UserList> {
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return ChatUsersList(
-                          name: snapshot.data.documents[index]["name"],
-                          secondaryText: "Secondary Text",
-                          image: snapshot.data.documents[index]["photoUrl"],
-                          time: snapshot.data.documents[index]["createdAt"],
-                          isMessageRead: true,
-                          userId: snapshot.data.documents[index]["uid"],
-                          screen: "UserListScreen");
+                        name: snapshot.data.documents[index]["name"],
+                        // secondaryText: "Secondary Text",
+                        image: snapshot.data.documents[index]["photoUrl"],
+                        time: snapshot.data.documents[index]["createdAt"],
+                        isMessageRead: true,
+                        userId: snapshot.data.documents[index]["uid"],
+                        // screen: "UserListScreen"
+                      );
                     },
                   );
                 }
@@ -179,13 +180,15 @@ class DataSearch extends SearchDelegate {
                         .toLowerCase()
                         .substring(0, query.length),
                     style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16),
                     children: [
                       TextSpan(
                           text: suggestionList[index]["name"]
                               .toLowerCase()
                               .substring(query.length),
-                          style: TextStyle(color: Colors.grey))
+                          style: TextStyle(color: Colors.grey, fontSize: 16))
                     ]),
               ),
             ),
