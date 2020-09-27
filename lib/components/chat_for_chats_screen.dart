@@ -1,5 +1,6 @@
 // import 'package:chat_app/modules/chat_detail_page.dart';
 import 'package:ChatApp/Screens/ChattingPage.dart';
+import 'package:ChatApp/Widgets/StatusIndicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -30,7 +31,7 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
         } else {
           return InkWell(
             onTap: () {
-              print(widget.data["content"]);
+              // print(widget.data["content"]);
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return Chat(
                     receiverId: snapshot.data["uid"],
@@ -46,10 +47,22 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
                   Expanded(
                     child: Row(
                       children: <Widget>[
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(snapshot.data["photoUrl"]),
-                          maxRadius: 30,
+                        Stack(
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(snapshot.data["photoUrl"]),
+                              maxRadius: 30,
+                            ),
+                            Positioned(
+                              left: 0,
+                              top: 30,
+                              child: StatusIndicator(
+                                uid: widget.data["id"],
+                                screen: "chatListScreen",
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           width: 16,
@@ -65,7 +78,11 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
                                   height: 6,
                                 ),
                                 Text(
-                                  widget.data["content"],
+                                  widget.data["type"] == 2
+                                      ? "GIF"
+                                      : widget.data["type"] == 1
+                                          ? "IMAGE"
+                                          : widget.data["content"],
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade500),

@@ -1,3 +1,4 @@
+import 'package:ChatApp/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,7 @@ oldcircularprogress() {
     alignment: Alignment.center,
     padding: EdgeInsets.only(top: 12.0),
     child: CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation(Colors.lightBlueAccent),
+      valueColor: AlwaysStoppedAnimation(kPrimaryColor),
     ),
   );
 }

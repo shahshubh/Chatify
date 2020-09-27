@@ -46,7 +46,9 @@ class Chat extends StatelessWidget {
       //   centerTitle: true,
       // ),
       appBar: ChatDetailPageAppBar(
-          receiverName: receiverName, receiverAvatar: receiverAvatar),
+          receiverName: receiverName,
+          receiverAvatar: receiverAvatar,
+          receiverId: receiverId),
       body: ChatScreen(receiverId: receiverId, receiverAvatar: receiverAvatar),
     );
   }
@@ -618,7 +620,9 @@ class ChatScreenState extends State<ChatScreen> {
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 1.0),
               child: IconButton(
-                icon: Icon(Icons.face),
+                icon: Icon(
+                  Icons.insert_emoticon,
+                ),
                 color: kPrimaryColor,
                 onPressed: getSticker,
               ),

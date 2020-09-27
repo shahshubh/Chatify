@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'ChattingPage.dart';
+
 class ChatsPage extends StatefulWidget {
   @override
   _ChatsPageState createState() => _ChatsPageState();
@@ -11,7 +13,7 @@ class ChatsPage extends StatefulWidget {
 
 class _ChatsPageState extends State<ChatsPage> {
   // List allUsers = [];
-  // List allUsersWithDetails = [];
+  var allUsersWithDetails = [];
   String currentuserid;
   SharedPreferences preferences;
   // bool isLoading = false;
@@ -19,7 +21,7 @@ class _ChatsPageState extends State<ChatsPage> {
   @override
   initState() {
     super.initState();
-    getCurrUserId();
+    _getUsersDetails();
   }
 
   getCurrUserId() async {
@@ -55,13 +57,14 @@ class _ChatsPageState extends State<ChatsPage> {
   //   }
   // }
 
-  // _getUsersDetails(String id) async {
-  //   DocumentSnapshot documentSnapshot =
-  //       await Firestore.instance.collection("Users").document(id).get();
+  _getUsersDetails() async {
+    await getCurrUserId();
+    QuerySnapshot querySnapshot =
+        await Firestore.instance.collection("Users").getDocuments();
 
-  //   allUsersWithDetails.add(documentSnapshot.data);
-  //   setState(() {});
-  // }
+    allUsersWithDetails = querySnapshot.documents;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +73,16 @@ class _ChatsPageState extends State<ChatsPage> {
         title: const Text('Chat App'),
         backgroundColor: kPrimaryColor,
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                  context: context,
+                  delegate: DataSearch(allUsersList: allUsersWithDetails));
+            },
+          )
+        ],
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -196,5 +209,103 @@ class _ChatsPageState extends State<ChatsPage> {
         ),
       ),
     );
+  }
+}
+
+// Search Bar
+
+class DataSearch extends SearchDelegate {
+  DataSearch({this.allUsersList});
+  var allUsersList;
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = "";
+        },
+      )
+    ];
+    // Actions for AppBar
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // Leading Icon on left of appBar
+    return IconButton(
+      icon: AnimatedIcon(
+        icon: AnimatedIcons.menu_arrow,
+        progress: transitionAnimation,
+      ),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // show some result based on selection
+
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // Show when someone searches for something
+    var userList = [];
+    allUsersList.forEach((e) {
+      userList.add(e);
+    });
+    var suggestionList = userList;
+
+    if (query.isNotEmpty) {
+      suggestionList = [];
+      userList.forEach((element) {
+        if (element["name"].toLowerCase().startsWith(query.toLowerCase())) {
+          suggestionList.add(element);
+        }
+      });
+    }
+
+    // suggestionList = query.isEmpty
+    //     ? suggestionList
+    //     : suggestionList
+    //         .where((element) => element.startsWith(query.toLowerCase()))
+    //         .toList();
+
+    return ListView.builder(
+        itemBuilder: (context, index) => ListTile(
+              onTap: () {
+                close(context, null);
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return Chat(
+                      receiverId: suggestionList[index]["uid"],
+                      receiverAvatar: suggestionList[index]["photoUrl"],
+                      receiverName: suggestionList[index]["name"]);
+                }));
+              },
+              leading: Icon(Icons.person),
+              title: RichText(
+                text: TextSpan(
+                    text: suggestionList[index]["name"]
+                        .toLowerCase()
+                        .substring(0, query.length),
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                    children: [
+                      TextSpan(
+                          text: suggestionList[index]["name"]
+                              .toLowerCase()
+                              .substring(query.length),
+                          style: TextStyle(color: Colors.grey))
+                    ]),
+              ),
+            ),
+        itemCount: suggestionList.length);
+    throw UnimplementedError();
   }
 }

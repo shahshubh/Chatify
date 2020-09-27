@@ -1,3 +1,4 @@
+import 'package:ChatApp/Widgets/StatusIndicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -5,9 +6,13 @@ class ChatDetailPageAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final String receiverAvatar;
   final String receiverName;
+  final String receiverId;
 
   ChatDetailPageAppBar(
-      {Key key, @required this.receiverAvatar, @required this.receiverName});
+      {Key key,
+      @required this.receiverAvatar,
+      @required this.receiverName,
+      @required this.receiverId});
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -50,10 +55,14 @@ class ChatDetailPageAppBar extends StatelessWidget
                     SizedBox(
                       height: 6,
                     ),
-                    Text(
-                      "Online",
-                      style: TextStyle(color: Colors.green, fontSize: 12),
-                    ),
+                    StatusIndicator(
+                      uid: receiverId,
+                      screen: "chatDetailScreen",
+                    )
+                    // Text(
+                    //   "Online",
+                    //   style: TextStyle(color: Colors.green, fontSize: 12),
+                    // ),
                   ],
                 ),
               ),
