@@ -84,11 +84,14 @@ class SettingsScreenState extends State<SettingsScreen> {
       }
     });
 
-    // upload image to firebase storage
-    uploadImageToFirestoreAndStorage();
+    if (pickedFile != null) {
+      // upload image to firebase storage
+      uploadImageToFirestoreAndStorage();
+    }
   }
 
   Future uploadImageToFirestoreAndStorage() async {
+    print("UPLODING TO FIREBASE");
     String mFileName = id;
     StorageReference storageReference =
         FirebaseStorage.instance.ref().child(mFileName);
