@@ -36,6 +36,8 @@ dependencies:
   flutter_local_notifications: 1.4.0
   photo_view: ^0.5.0
   http:
+  popup_menu:
+  font_awesome_flutter:
 
 dev_dependencies:
   flutter_test:
