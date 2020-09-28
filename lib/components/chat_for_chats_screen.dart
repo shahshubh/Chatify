@@ -82,7 +82,17 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
                                       ? "GIF"
                                       : widget.data["type"] == 1
                                           ? "IMAGE"
-                                          : widget.data["content"],
+                                          : widget
+                                                      .data["content"]
+                                                      .toString()
+                                                      .length >
+                                                  30
+                                              ? widget.data["content"]
+                                                      .toString()
+                                                      .substring(0, 30) +
+                                                  "..."
+                                              : widget.data["content"]
+                                                  .toString(),
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade500),
