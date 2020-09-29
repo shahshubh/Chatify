@@ -52,12 +52,12 @@ class SettingsScreenState extends State<SettingsScreen> {
   TextEditingController nameTextEditingController;
   TextEditingController emailTextEditingController;
 
+  String defaultProfileUrl =
+      "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg";
   String id = "";
   String name = "";
   String email = "";
   String photoUrl = "";
-  String defaultPhotoUrl =
-      "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg";
   File imageFileAvatar;
   final picker = ImagePicker();
   bool isLoading = false;
@@ -171,44 +171,42 @@ class SettingsScreenState extends State<SettingsScreen> {
                   child: Stack(
                     children: <Widget>[
                       (imageFileAvatar == null)
-                          ? (photoUrl != "")
-                              ? Container(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Material(
-                                          // display already existing image
-                                          child: CachedNetworkImage(
-                                            placeholder: (context, url) =>
-                                                Container(
-                                              child: CircularProgressIndicator(
-                                                strokeWidth: 2.0,
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<
-                                                            Color>(
-                                                        Colors.lightBlueAccent),
-                                              ),
-                                              width: 200.0,
-                                              height: 200.0,
-                                              padding: EdgeInsets.all(20.0),
-                                            ),
-                                            imageUrl:
-                                                photoUrl ?? defaultPhotoUrl,
-                                            width: 200.0,
-                                            height: 200.0,
-                                            fit: BoxFit.cover,
+                          // ? (photoUrl != "")
+                          ? Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Material(
+                                      // display already existing image
+                                      child: CachedNetworkImage(
+                                        placeholder: (context, url) =>
+                                            Container(
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2.0,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.lightBlueAccent),
                                           ),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(125.0)),
-                                          clipBehavior: Clip.hardEdge),
-                                    ],
-                                  ),
-                                )
-                              : Icon(
-                                  Icons.account_circle,
-                                  size: 90.0,
-                                  color: Colors.grey,
-                                )
+                                          width: 200.0,
+                                          height: 200.0,
+                                          padding: EdgeInsets.all(20.0),
+                                        ),
+                                        imageUrl: photoUrl,
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(125.0)),
+                                      clipBehavior: Clip.hardEdge),
+                                ],
+                              ),
+                            )
+                          // : Icon(
+                          //     Icons.account_circle,
+                          //     size: 90.0,
+                          //     color: Colors.grey,
+                          //   )
                           : Container(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
