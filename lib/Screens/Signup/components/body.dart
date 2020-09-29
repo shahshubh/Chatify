@@ -79,7 +79,7 @@ class _SignUpState extends State<SignUp> {
           "email": firebaseUser.email,
           "name": nameEditingController.text,
           "photoUrl":
-              "https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg",
+              "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg",
           // firebaseUser.photoUrl
           "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
           "chattingWith": null,

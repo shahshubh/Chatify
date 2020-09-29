@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:ChatApp/components/chat_detail_page_appbar.dart';
 import 'package:ChatApp/constants.dart';
+import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -101,7 +102,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   String recieverFcmToken;
 
-  var listMessage;
+  var listMessage = [];
 
   @override
   void initState() {
@@ -410,31 +411,119 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  bool isNewMsg(int index) {
+    if (index == (listMessage.length - 1)) {
+      return true;
+    }
+    DateTime curr = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(listMessage[index]["timestamp"]));
+    DateTime prev = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(listMessage[index + 1]["timestamp"]));
+    if (curr.year == prev.year &&
+        curr.month == prev.month &&
+        curr.day == prev.day) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  bool isToday(int index) {
+    DateTime today = DateTime.now();
+    DateTime curr = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(listMessage[index]["timestamp"]));
+    if (curr.day == today.day) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool isYesterday(int index) {
+    DateTime today = DateTime.now();
+    DateTime curr = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(listMessage[index]["timestamp"]));
+    if (curr.day == (today.day - 1)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Widget createItem(int index, DocumentSnapshot document) {
     //Logged User Messages - right side
     if (document["idFrom"] == id) {
       return Container(
         child: Column(
           children: [
+            isNewMsg(index)
+                ? Bubble(
+                    margin: BubbleEdges.only(top: 10, bottom: 10),
+                    alignment: Alignment.center,
+                    color: Color.fromRGBO(212, 234, 244, 1.0),
+                    child: Text(
+                        isToday(index)
+                            ? "TODAY"
+                            : isYesterday(index)
+                                ? "YESTERDAY"
+                                : DateFormat("dd MMMM yyy").format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(document["timestamp"]))),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 11.0)),
+                  )
+                : Container(),
             Row(
               children: [
                 // Text Msg
                 document["type"] == 0
-                    ? Container(
-                        child: Text(
-                          document["content"],
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w500),
+                    ? Bubble(
+                        padding: BubbleEdges.all(10),
+                        margin: BubbleEdges.only(top: 5),
+                        alignment: Alignment.topRight,
+                        nip: BubbleNip.rightTop,
+                        color: kPrimaryColor,
+                        child: Row(
+                          children: [
+                            RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                  text: document["content"],
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ]),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0, top: 5.0),
+                              child: Text(
+                                DateFormat("hh:mm:aa").format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(document["timestamp"]))),
+                                style: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 12.0,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ],
                         ),
-                        padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                        width: 200.0,
-                        decoration: BoxDecoration(
-                            color: kPrimaryColor,
-                            borderRadius: BorderRadius.circular(8.0)),
-                        margin: EdgeInsets.only(
-                          // bottom: isLastMsgRight(index) ? 20.0 : 10.0,
-                          right: 10.0,
-                        ))
+                      )
+
+                    // Container(
+                    //     child: Text(
+                    //       document["content"],
+                    //       style: TextStyle(
+                    //           color: Colors.white, fontWeight: FontWeight.w500),
+                    //     ),
+                    //     padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                    //     width: 200.0,
+                    //     decoration: BoxDecoration(
+                    //         color: kPrimaryColor,
+                    //         borderRadius: BorderRadius.circular(8.0)),
+                    //     margin: EdgeInsets.only(
+                    //       // bottom: isLastMsgRight(index) ? 20.0 : 10.0,
+                    //       right: 10.0,
+                    //     ))
                     // Image Msg
                     : document["type"] == 1
                         ? Container(
@@ -503,21 +592,18 @@ class ChatScreenState extends State<ChatScreen> {
             ),
 
             //MSG TIME
-            isLastMsgRight(index)
-                ? Container(
-                    child: Text(
-                      DateFormat("hh:mm aa").format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document["timestamp"]))),
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12.0,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    margin:
-                        EdgeInsets.only(right: 10.0, top: 10.0, bottom: 5.0),
-                  )
-                : Container(),
+            // Container(
+            //   child: Text(
+            //     DateFormat("hh:mm aa").format(
+            //         DateTime.fromMillisecondsSinceEpoch(
+            //             int.parse(document["timestamp"]))),
+            //     style: TextStyle(
+            //         color: Colors.grey,
+            //         fontSize: 12.0,
+            //         fontStyle: FontStyle.italic),
+            //   ),
+            //   margin: EdgeInsets.only(right: 10.0, top: 10.0, bottom: 5.0),
+            // )
           ],
           crossAxisAlignment: CrossAxisAlignment.end,
         ),
@@ -530,10 +616,27 @@ class ChatScreenState extends State<ChatScreen> {
       return Container(
         child: Column(
           children: [
+            isNewMsg(index)
+                ? Bubble(
+                    margin: BubbleEdges.only(top: 10, bottom: 10),
+                    alignment: Alignment.center,
+                    color: Color.fromRGBO(212, 234, 244, 1.0),
+                    child: Text(
+                        isToday(index)
+                            ? "TODAY"
+                            : isYesterday(index)
+                                ? "YESTERDAY"
+                                : DateFormat("dd MMMM yyy").format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(document["timestamp"]))),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 11.0)),
+                  )
+                : Container(),
+
             Row(
               children: [
                 // DISPLAY RECIEVER PROFILE IMAGE
-
                 isLastMsgLeft(index)
                     ? Material(
                         child: CachedNetworkImage(
@@ -559,28 +662,59 @@ class ChatScreenState extends State<ChatScreen> {
 
                 // DISPLAY MESSAGES
                 document["type"] == 0
-                    ? Container(
-                        child: Text(
-                          document["content"],
-                          style: TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.w400),
-                        ),
-                        padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                        width: 200.0,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8.0),
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //     color: Colors.grey.withOpacity(0.5),
-                          //     spreadRadius: 1,
-                          //     blurRadius: 2,
-                          //     offset:
-                          //         Offset(0, 1), // changes position of shadow
-                          //   ),
-                          // ],
-                        ),
-                        margin: EdgeInsets.only(left: 10.0))
+                    ? Bubble(
+                        padding: BubbleEdges.all(10),
+                        margin: BubbleEdges.only(top: 5, left: 5),
+                        alignment: Alignment.topRight,
+                        nip: BubbleNip.leftTop,
+                        color: Colors.grey[200],
+                        child: Row(
+                          children: [
+                            RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                  text: document["content"],
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ]),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0, top: 5.0),
+                              child: Text(
+                                DateFormat("hh:mm:aa").format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(document["timestamp"]))),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12.0,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ],
+                        ))
+
+                    //  Container(
+                    //     child: Text(
+                    //       document["content"],
+                    //       style: TextStyle(
+                    //           color: Colors.black, fontWeight: FontWeight.w400),
+                    //     ),
+                    //     padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                    //     width: 200.0,
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.grey[200],
+                    //       borderRadius: BorderRadius.circular(8.0),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.grey.withOpacity(0.5),
+                    //     spreadRadius: 1,
+                    //     blurRadius: 2,
+                    //     offset:
+                    //         Offset(0, 1), // changes position of shadow
+                    //   ),
+                    // ],
+                    // ),
+                    // margin: EdgeInsets.only(left: 10.0))
 
                     // Image Msg
                     : document["type"] == 1
@@ -645,20 +779,18 @@ class ChatScreenState extends State<ChatScreen> {
             ),
 
             //Msg Time
-            isLastMsgLeft(index)
-                ? Container(
-                    child: Text(
-                      DateFormat("hh:mm:aa").format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document["timestamp"]))),
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12.0,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    margin: EdgeInsets.only(left: 50.0, top: 10.0, bottom: 5.0),
-                  )
-                : Container(),
+            // Container(
+            //   child: Text(
+            //     DateFormat("hh:mm:aa").format(
+            //         DateTime.fromMillisecondsSinceEpoch(
+            //             int.parse(document["timestamp"]))),
+            //     style: TextStyle(
+            //         color: Colors.grey,
+            //         fontSize: 12.0,
+            //         fontStyle: FontStyle.italic),
+            //   ),
+            //   margin: EdgeInsets.only(left: 50.0, top: 10.0, bottom: 5.0),
+            // )
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
