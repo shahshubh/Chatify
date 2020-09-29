@@ -22,21 +22,21 @@ class _BodyState extends State<Body> {
 
   void initState() {
     super.initState();
-    isSignedIn();
+    //isSignedIn();
   }
 
-  void isSignedIn() async {
-    preferences = await SharedPreferences.getInstance();
+  // void isSignedIn() async {
+  //   preferences = await SharedPreferences.getInstance();
 
-    await FirebaseAuth.instance.currentUser().then((user) {
-      if (user != null) {
-        Route route = MaterialPageRoute(
-            builder: (c) =>
-                HomeScreen(currentuserid: preferences.getString("uid")));
-        Navigator.pushReplacement(context, route);
-      }
-    });
-  }
+  //   await FirebaseAuth.instance.currentUser().then((user) {
+  //     if (user != null) {
+  //       Route route = MaterialPageRoute(
+  //           builder: (c) =>
+  //               HomeScreen(currentuserid: preferences.getString("uid")));
+  //       Navigator.pushReplacement(context, route);
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
