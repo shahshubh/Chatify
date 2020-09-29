@@ -37,6 +37,8 @@ dependencies:
   photo_view: ^0.5.0
   animated_text_kit: ^2.2.0
   http:
+  font_awesome_flutter:
+  bubble:
 
 dev_dependencies:
   flutter_test:
