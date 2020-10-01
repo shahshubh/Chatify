@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'HomeScreen.dart';
 import 'package:ChatApp/Screens/Welcome/welcome_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:video_player/video_player.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -16,23 +17,30 @@ class _SplashScreenState extends State<SplashScreen>
   SharedPreferences preferences;
   AnimationController animationController;
   Animation<double> animation;
+  VideoPlayerController playerController;
+  VoidCallback listener;
   var _visible = true;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    animationController = new AnimationController(
-        vsync: this, duration: new Duration(seconds: 2));
-    animation =
-        new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
+    // animationController = new AnimationController(
+    //     vsync: this, duration: new Duration(seconds: 2));
+    // animation =
+    //     new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
 
-    animation.addListener(() => this.setState(() {}));
-    animationController.forward();
+    // animation.addListener(() => this.setState(() {}));
+    // animationController.forward();
 
-    setState(() {
-      _visible = !_visible;
-    });
+    // setState(() {
+    //   _visible = !_visible;
+    // });
+    listener = () {
+      setState(() {});
+    };
+    initializeVideo();
+    playerController.play();
     startTime();
   }
 
@@ -42,6 +50,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void navigateuser() async {
+    playerController.setVolume(0.0);
+    playerController.removeListener(listener);
     preferences = await SharedPreferences.getInstance();
 
     await FirebaseAuth.instance.currentUser().then((user) {
@@ -57,24 +67,75 @@ class _SplashScreenState extends State<SplashScreen>
     });
   }
 
+  void initializeVideo() {
+    playerController = VideoPlayerController.asset('assets/videos/intro1.mp4')
+      ..addListener(listener)
+      ..setVolume(1.0)
+      ..initialize()
+      ..play();
+  }
+
+  @override
+  void deactivate() {
+    if (playerController != null) {
+      playerController.setVolume(0.0);
+      playerController.removeListener(listener);
+    }
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    if (playerController != null) playerController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Image.asset(
-                'assets/images/icon1.jpg',
-                width: animation.value * 250,
-                height: animation.value * 250,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return
+        //   Scaffold(
+        //     body: Stack(
+        //       fit: StackFit.expand,
+        //       children: <Widget>[
+        //         new Column(
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           children: <Widget>[
+        //             new Image.asset(
+        //               'assets/images/icon1.jpg',
+        //               width: animation.value * 250,
+        //               height: animation.value * 250,
+        //             ),
+        //             SizedBox(
+        //               width: 250.0,
+        //               child: TextLiquidFill(
+        //                 text: 'ChatApp',
+        //                 waveColor: Colors.blueAccent,
+        //                 boxBackgroundColor: Colors.redAccent,
+        //                 textStyle: TextStyle(
+        //                   fontSize: 80.0,
+        //                   fontWeight: FontWeight.bold,
+        //                 ),
+        //                 boxHeight: 300.0,
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       ],
+        //     ),
+        //   );
+        // }
+        Scaffold(
+            body: Stack(fit: StackFit.expand, children: <Widget>[
+      new AspectRatio(
+          aspectRatio: 9 / 16,
+          child: Container(
+            child: (playerController != null
+                ? VideoPlayer(
+                    playerController,
+                  )
+                : Container()),
+          )),
+    ]));
   }
 }
