@@ -34,7 +34,7 @@ class _UserListState extends State<UserList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat App'),
+        title: const Text('Chatify'),
         backgroundColor: kPrimaryColor,
         centerTitle: true,
         actions: [
