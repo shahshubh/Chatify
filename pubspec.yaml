@@ -36,6 +36,7 @@ dependencies:
   flutter_local_notifications: 1.4.0
   photo_view: ^0.5.0
   animated_text_kit: ^2.2.0
+  video_player: ^0.8.0
   http:
   font_awesome_flutter:
   bubble:
@@ -58,6 +59,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/videos/intro1.mp4
     - images/mimi1.gif
     - images/mimi2.gif
     - images/mimi3.gif
