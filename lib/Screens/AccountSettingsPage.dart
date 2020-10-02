@@ -52,8 +52,6 @@ class SettingsScreenState extends State<SettingsScreen> {
   TextEditingController nameTextEditingController;
   TextEditingController emailTextEditingController;
 
-  String defaultProfileUrl =
-      "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg";
   String id = "";
   String name = "";
   String email = "";

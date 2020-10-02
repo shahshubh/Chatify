@@ -23,6 +23,8 @@ class UserStateMethods {
 
   Future<Null> logoutuser(BuildContext context) async {
     preferences = await SharedPreferences.getInstance();
+    setUserState(
+        userId: preferences.getString("uid"), userState: UserState.Offline);
     await FirebaseAuth.instance.signOut();
     await preferences.clear();
 
