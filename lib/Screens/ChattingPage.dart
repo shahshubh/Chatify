@@ -144,13 +144,14 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Future<bool> callOnFcmApiSendPushNotifications(
-      String userToken, String body) async {
+      String userToken, String body, String image) async {
     print("SENDING PUSH NOTIFICATION");
     final postUrl = 'https://fcm.googleapis.com/fcm/send';
     final data = {
       "notification": {
         "body": "$body",
-        "title": "${preferences.getString('name')}"
+        "title": "${preferences.getString('name')}",
+        "image": image
       },
       "priority": "high",
       "data": {
@@ -875,8 +876,9 @@ class ChatScreenState extends State<ChatScreen> {
 
     if (contentMsg != "") {
       String body = type == 0 ? contentMsg : type == 1 ? "Image" : "GIF";
+      String image = type == 1 ? contentMsg : "";
 
-      callOnFcmApiSendPushNotifications(recieverFcmToken, body);
+      callOnFcmApiSendPushNotifications(recieverFcmToken, body, image);
       textEditingController.clear();
 
       Firestore.instance
