@@ -1,4 +1,4 @@
-name: ChatApp
+name: Chatify
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -40,6 +40,8 @@ dependencies:
   http:
   font_awesome_flutter:
   bubble:
+  giphy_picker: ^1.0.6
+  popup_menu: ^1.0.5
 
 dev_dependencies:
   flutter_test:

@@ -1,9 +1,8 @@
-import 'package:ChatApp/Models/user.dart';
-import 'package:ChatApp/Screens/ChattingPage.dart';
-import 'package:ChatApp/constants.dart';
+import 'package:Chatify/Screens/ChatDetail/ChattingPage.dart';
+import 'package:Chatify/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/components/chat.dart';
+import 'package:Chatify/components/chat.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserList extends StatefulWidget {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ChatApp/Screens/Welcome/welcome_screen.dart';
-import 'package:ChatApp/constants.dart';
+import 'package:Chatify/constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'Screens/SplashScreen.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

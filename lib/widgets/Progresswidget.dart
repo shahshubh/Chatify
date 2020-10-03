@@ -1,4 +1,4 @@
-import 'package:ChatApp/constants.dart';
+import 'package:Chatify/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
