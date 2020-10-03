@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ChatApp/components/chat_detail_page_appbar.dart';
-import 'package:ChatApp/constants.dart';
+import 'package:Chatify/components/chat_detail_page_appbar.dart';
+import 'package:Chatify/constants.dart';
 import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/Widgets/FullImageWidget.dart';
-import 'package:ChatApp/Widgets/ProgressWidget.dart';
+import 'package:Chatify/Widgets/FullImageWidget.dart';
+import 'package:Chatify/Widgets/ProgressWidget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -122,8 +122,8 @@ class ChatScreenState extends State<ChatScreen> {
         .document(receiverId)
         .get()
         .then((datasnapshot) {
-      print(datasnapshot.data["name"]);
-      print(datasnapshot.data["fcmToken"]);
+      // print(datasnapshot.data["name"]);
+      // print(datasnapshot.data["fcmToken"]);
       setState(() {
         recieverFcmToken = datasnapshot.data["fcmToken"];
       });
@@ -145,7 +145,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   Future<bool> callOnFcmApiSendPushNotifications(
       String userToken, String body, String image) async {
-    print("SENDING PUSH NOTIFICATION");
+    // print("SENDING PUSH NOTIFICATION");
     final postUrl = 'https://fcm.googleapis.com/fcm/send';
     final data = {
       "notification": {
@@ -175,10 +175,10 @@ class ChatScreenState extends State<ChatScreen> {
 
     if (response.statusCode == 200) {
       // on success do sth
-      print('test ok push CFM');
+      // print('test ok push CFM');
       return true;
     } else {
-      print(' CFM error');
+      // print(' CFM error');
       // on failure do sth
       return false;
     }
@@ -474,6 +474,7 @@ class ChatScreenState extends State<ChatScreen> {
                         style: TextStyle(fontSize: 11.0)),
                   )
                 : Container(),
+
             Row(
               children: [
                 // Text Msg
@@ -486,13 +487,14 @@ class ChatScreenState extends State<ChatScreen> {
                         color: kPrimaryColor,
                         child: Row(
                           children: [
-                            RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: document["content"],
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ]),
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.4),
+                              child: Text(
+                                document["content"],
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 10.0, top: 5.0),
@@ -510,21 +512,6 @@ class ChatScreenState extends State<ChatScreen> {
                         ),
                       )
 
-                    // Container(
-                    //     child: Text(
-                    //       document["content"],
-                    //       style: TextStyle(
-                    //           color: Colors.white, fontWeight: FontWeight.w500),
-                    //     ),
-                    //     padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    //     width: 200.0,
-                    //     decoration: BoxDecoration(
-                    //         color: kPrimaryColor,
-                    //         borderRadius: BorderRadius.circular(8.0)),
-                    //     margin: EdgeInsets.only(
-                    //       // bottom: isLastMsgRight(index) ? 20.0 : 10.0,
-                    //       right: 10.0,
-                    //     ))
                     // Image Msg
                     : document["type"] == 1
                         ? Container(
@@ -571,9 +558,7 @@ class ChatScreenState extends State<ChatScreen> {
                                             url: document["content"])));
                               },
                             ),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMsgRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
+                            margin: EdgeInsets.only(bottom: 10.0),
                           )
 
                         // GIF Msg
@@ -584,27 +569,28 @@ class ChatScreenState extends State<ChatScreen> {
                               height: 100.0,
                               fit: BoxFit.cover,
                             ),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMsgRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
+                            margin: EdgeInsets.only(bottom: 10.0),
                           ),
               ],
               mainAxisAlignment: MainAxisAlignment.end,
             ),
 
             //MSG TIME
-            // Container(
-            //   child: Text(
-            //     DateFormat("hh:mm aa").format(
-            //         DateTime.fromMillisecondsSinceEpoch(
-            //             int.parse(document["timestamp"]))),
-            //     style: TextStyle(
-            //         color: Colors.grey,
-            //         fontSize: 12.0,
-            //         fontStyle: FontStyle.italic),
-            //   ),
-            //   margin: EdgeInsets.only(right: 10.0, top: 10.0, bottom: 5.0),
-            // )
+            document["type"] != 0
+                ? Container(
+                    child: Text(
+                      DateFormat("hh:mm aa").format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document["timestamp"]))),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontStyle: FontStyle.italic),
+                    ),
+                    margin:
+                        EdgeInsets.only(right: 10.0, top: 10.0, bottom: 5.0),
+                  )
+                : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.end,
         ),
@@ -671,13 +657,14 @@ class ChatScreenState extends State<ChatScreen> {
                         color: Colors.grey[200],
                         child: Row(
                           children: [
-                            RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: document["content"],
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ]),
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.4),
+                              child: Text(
+                                document["content"],
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 10.0, top: 5.0),
@@ -693,29 +680,6 @@ class ChatScreenState extends State<ChatScreen> {
                             ),
                           ],
                         ))
-
-                    //  Container(
-                    //     child: Text(
-                    //       document["content"],
-                    //       style: TextStyle(
-                    //           color: Colors.black, fontWeight: FontWeight.w400),
-                    //     ),
-                    //     padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    //     width: 200.0,
-                    //     decoration: BoxDecoration(
-                    //       color: Colors.grey[200],
-                    //       borderRadius: BorderRadius.circular(8.0),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: Colors.grey.withOpacity(0.5),
-                    //     spreadRadius: 1,
-                    //     blurRadius: 2,
-                    //     offset:
-                    //         Offset(0, 1), // changes position of shadow
-                    //   ),
-                    // ],
-                    // ),
-                    // margin: EdgeInsets.only(left: 10.0))
 
                     // Image Msg
                     : document["type"] == 1
@@ -763,7 +727,7 @@ class ChatScreenState extends State<ChatScreen> {
                                             url: document["content"])));
                               },
                             ),
-                            margin: EdgeInsets.only(left: 10.0),
+                            // margin: EdgeInsets.only(left: 5.0),
                           )
                         : Container(
                             child: Image.asset(
@@ -772,26 +736,26 @@ class ChatScreenState extends State<ChatScreen> {
                               height: 100.0,
                               fit: BoxFit.cover,
                             ),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMsgRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
+                            margin: EdgeInsets.only(bottom: 10.0, right: 10.0),
                           ),
               ],
             ),
 
             //Msg Time
-            // Container(
-            //   child: Text(
-            //     DateFormat("hh:mm:aa").format(
-            //         DateTime.fromMillisecondsSinceEpoch(
-            //             int.parse(document["timestamp"]))),
-            //     style: TextStyle(
-            //         color: Colors.grey,
-            //         fontSize: 12.0,
-            //         fontStyle: FontStyle.italic),
-            //   ),
-            //   margin: EdgeInsets.only(left: 50.0, top: 10.0, bottom: 5.0),
-            // )
+            document["type"] != 0
+                ? Container(
+                    child: Text(
+                      DateFormat("hh:mm:aa").format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document["timestamp"]))),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontStyle: FontStyle.italic),
+                    ),
+                    margin: EdgeInsets.only(left: 50.0, top: 10.0, bottom: 5.0),
+                  )
+                : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
@@ -930,7 +894,8 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 75);
     setState(() {
       if (pickedFile != null) {
         imageFile = File(pickedFile.path);
