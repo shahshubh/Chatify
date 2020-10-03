@@ -1,6 +1,6 @@
-import 'package:ChatApp/Screens/Welcome/welcome_screen.dart';
-import 'package:ChatApp/Utils/utils.dart';
-import 'package:ChatApp/enum/user_state.dart';
+import 'package:Chatify/Screens/Welcome/welcome_screen.dart';
+import 'package:Chatify/Utils/utils.dart';
+import 'package:Chatify/enum/user_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

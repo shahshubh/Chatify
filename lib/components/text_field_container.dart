@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ChatApp/constants.dart';
+import 'package:Chatify/constants.dart';
 
 class TextFieldContainer extends StatelessWidget {
   final Widget child;

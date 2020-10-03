@@ -1,4 +1,4 @@
-import 'package:ChatApp/Widgets/StatusIndicator.dart';
+import 'package:Chatify/Widgets/StatusIndicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

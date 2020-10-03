@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ChatApp/components/text_field_container.dart';
-import 'package:ChatApp/constants.dart';
+import 'package:Chatify/components/text_field_container.dart';
+import 'package:Chatify/constants.dart';
 
 class RoundedInputField extends StatelessWidget {
   final String hintText;
