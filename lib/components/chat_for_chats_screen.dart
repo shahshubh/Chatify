@@ -77,21 +77,22 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
                                   height: 6,
                                 ),
                                 Text(
-                                  widget.data["type"] == 2
-                                      ? "GIF"
-                                      : widget.data["type"] == 1
-                                          ? "IMAGE"
-                                          : widget
-                                                      .data["content"]
-                                                      .toString()
-                                                      .length >
-                                                  30
-                                              ? widget.data["content"]
-                                                      .toString()
-                                                      .substring(0, 30) +
-                                                  "..."
+                                  widget.data["type"] == 3
+                                      ? "Sticker"
+                                      : widget.data["type"] == 2
+                                          ? "GIF"
+                                          : widget.data["type"] == 1
+                                              ? "IMAGE"
                                               : widget.data["content"]
-                                                  .toString(),
+                                                          .toString()
+                                                          .length >
+                                                      30
+                                                  ? widget.data["content"]
+                                                          .toString()
+                                                          .substring(0, 30) +
+                                                      "..."
+                                                  : widget.data["content"]
+                                                      .toString(),
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade500),
