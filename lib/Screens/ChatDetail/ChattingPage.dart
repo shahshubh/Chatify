@@ -2,18 +2,21 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:ChatApp/components/chat_detail_page_appbar.dart';
-import 'package:ChatApp/constants.dart';
+import 'package:Chatify/components/chat_detail_page_appbar.dart';
+import 'package:Chatify/components/sticker_gif.dart';
+import 'package:Chatify/constants.dart';
 import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/Widgets/FullImageWidget.dart';
-import 'package:ChatApp/Widgets/ProgressWidget.dart';
+import 'package:Chatify/Widgets/FullImageWidget.dart';
+import 'package:Chatify/Widgets/ProgressWidget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:giphy_picker/giphy_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:popup_menu/popup_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -104,6 +107,9 @@ class ChatScreenState extends State<ChatScreen> {
 
   var listMessage = [];
 
+  PopupMenu menu;
+  GlobalKey gifBtnKey = GlobalKey();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -114,6 +120,59 @@ class ChatScreenState extends State<ChatScreen> {
 
     chatId = "";
     readLocal();
+
+    menu = PopupMenu(items: [
+      MenuItem(
+          title: 'Image',
+          image: Icon(
+            Icons.image,
+            color: Colors.white,
+          )),
+      MenuItem(
+          title: 'Sticker',
+          image: Icon(
+            Icons.insert_emoticon,
+            color: Colors.white,
+          )),
+      MenuItem(
+          title: 'GIF',
+          image: Icon(
+            Icons.gif,
+            color: Colors.white,
+          )),
+    ], onClickMenu: onClickMenu, onDismiss: onDismiss, maxColumn: 4);
+  }
+
+  void stateChanged(bool isShow) {
+    print('menu is ${isShow ? 'showing' : 'closed'}');
+  }
+
+  void onClickMenu(MenuItemProvider item) {
+    switch (item.menuTitle) {
+      case "Image":
+        getImage();
+        setState(() {
+          isDisplaySticker = false;
+        });
+        break;
+
+      case "Sticker":
+        getSticker();
+        break;
+
+      case "GIF":
+        getGif();
+        setState(() {
+          isDisplaySticker = false;
+        });
+        break;
+    }
+
+    print('Click menu -> ${item.menuTitle}');
+  }
+
+  void onDismiss() {
+    print('Menu is dismiss');
   }
 
   readLocal() async {
@@ -122,8 +181,8 @@ class ChatScreenState extends State<ChatScreen> {
         .document(receiverId)
         .get()
         .then((datasnapshot) {
-      print(datasnapshot.data["name"]);
-      print(datasnapshot.data["fcmToken"]);
+      // print(datasnapshot.data["name"]);
+      // print(datasnapshot.data["fcmToken"]);
       setState(() {
         recieverFcmToken = datasnapshot.data["fcmToken"];
       });
@@ -145,7 +204,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   Future<bool> callOnFcmApiSendPushNotifications(
       String userToken, String body, String image) async {
-    print("SENDING PUSH NOTIFICATION");
+    // print("SENDING PUSH NOTIFICATION");
     final postUrl = 'https://fcm.googleapis.com/fcm/send';
     final data = {
       "notification": {
@@ -175,10 +234,10 @@ class ChatScreenState extends State<ChatScreen> {
 
     if (response.statusCode == 200) {
       // on success do sth
-      print('test ok push CFM');
+      // print('test ok push CFM');
       return true;
     } else {
-      print(' CFM error');
+      // print(' CFM error');
       // on failure do sth
       return false;
     }
@@ -195,6 +254,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PopupMenu.context = context;
     return WillPopScope(
       child: Stack(
         children: [
@@ -237,103 +297,29 @@ class ChatScreenState extends State<ChatScreen> {
         children: [
           Row(
             children: [
-              FlatButton(
-                onPressed: () => onSendMessage("mimi1", 2),
-                child: Image.asset(
-                  "images/mimi1.gif",
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => onSendMessage("mimi2", 2),
-                child: Image.asset(
-                  "images/mimi2.gif",
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => onSendMessage("mimi3", 2),
-                child: Image.asset(
-                  "images/mimi3.gif",
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              StickerGif(gifName: "mimi1", onSendMessage: onSendMessage),
+              StickerGif(gifName: "mimi2", onSendMessage: onSendMessage),
+              StickerGif(gifName: "mimi3", onSendMessage: onSendMessage),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           ),
 
           //ROW 2
-
           Row(
             children: [
-              FlatButton(
-                onPressed: () => onSendMessage("mimi4", 2),
-                child: Image.asset(
-                  "images/mimi4.gif",
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => onSendMessage("mimi5", 2),
-                child: Image.asset(
-                  "images/mimi5.gif",
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => onSendMessage("mimi6", 2),
-                child: Image.asset(
-                  "images/mimi6.gif",
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              StickerGif(gifName: "mimi4", onSendMessage: onSendMessage),
+              StickerGif(gifName: "mimi5", onSendMessage: onSendMessage),
+              StickerGif(gifName: "mimi6", onSendMessage: onSendMessage),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           ),
 
           //ROW 3
-
           Row(
             children: [
-              FlatButton(
-                onPressed: () => onSendMessage("mimi7", 2),
-                child: Image.asset(
-                  "images/mimi7.gif",
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => onSendMessage("mimi8", 2),
-                child: Image.asset(
-                  "images/mimi8.gif",
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              FlatButton(
-                onPressed: () => onSendMessage("mimi9", 2),
-                child: Image.asset(
-                  "images/mimi9.gif",
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              StickerGif(gifName: "mimi7", onSendMessage: onSendMessage),
+              StickerGif(gifName: "mimi8", onSendMessage: onSendMessage),
+              StickerGif(gifName: "mimi9", onSendMessage: onSendMessage),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           )
@@ -474,6 +460,7 @@ class ChatScreenState extends State<ChatScreen> {
                         style: TextStyle(fontSize: 11.0)),
                   )
                 : Container(),
+
             Row(
               children: [
                 // Text Msg
@@ -486,13 +473,14 @@ class ChatScreenState extends State<ChatScreen> {
                         color: kPrimaryColor,
                         child: Row(
                           children: [
-                            RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: document["content"],
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ]),
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.4),
+                              child: Text(
+                                document["content"],
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 10.0, top: 5.0),
@@ -510,21 +498,6 @@ class ChatScreenState extends State<ChatScreen> {
                         ),
                       )
 
-                    // Container(
-                    //     child: Text(
-                    //       document["content"],
-                    //       style: TextStyle(
-                    //           color: Colors.white, fontWeight: FontWeight.w500),
-                    //     ),
-                    //     padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    //     width: 200.0,
-                    //     decoration: BoxDecoration(
-                    //         color: kPrimaryColor,
-                    //         borderRadius: BorderRadius.circular(8.0)),
-                    //     margin: EdgeInsets.only(
-                    //       // bottom: isLastMsgRight(index) ? 20.0 : 10.0,
-                    //       right: 10.0,
-                    //     ))
                     // Image Msg
                     : document["type"] == 1
                         ? Container(
@@ -571,40 +544,86 @@ class ChatScreenState extends State<ChatScreen> {
                                             url: document["content"])));
                               },
                             ),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMsgRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
+                            margin: EdgeInsets.only(bottom: 10.0),
                           )
 
                         // GIF Msg
-                        : Container(
-                            child: Image.asset(
-                              "images/${document['content']}.gif",
-                              width: 100.0,
-                              height: 100.0,
-                              fit: BoxFit.cover,
-                            ),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMsgRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
-                          ),
+                        : document["type"] == 2
+                            ? Container(
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    child: CircularProgressIndicator(
+                                      valueColor:
+                                          AlwaysStoppedAnimation(kPrimaryColor),
+                                    ),
+                                    width: 200.0,
+                                    height: 200.0,
+                                    padding: EdgeInsets.all(70.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0)),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Material(
+                                    child: Image.asset(
+                                      "images/img_not_available.jpeg",
+                                      width: 200.0,
+                                      height: 200.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    clipBehavior: Clip.hardEdge,
+                                  ),
+                                  imageUrl: document["content"],
+                                  width: 200.0,
+                                  height: 200.0,
+                                  fit: BoxFit.cover,
+                                ),
+
+                                // child: Image.network(
+                                //   document['content'],
+                                //   headers: {'accept': 'image/*'},
+                                //   width: 200.0,
+                                //   height: 200.0,
+                                // ),
+                                // child: Image.asset(
+                                //   "images/${document['content']}.gif",
+                                //   width: 100.0,
+                                //   height: 100.0,
+                                //   fit: BoxFit.cover,
+                                // ),
+                                // margin: EdgeInsets.only(bottom: 10.0),
+                              )
+                            : Container(
+                                child: Image.asset(
+                                  "images/${document['content']}.gif",
+                                  width: 100.0,
+                                  height: 100.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                margin: EdgeInsets.only(bottom: 10.0),
+                              )
               ],
               mainAxisAlignment: MainAxisAlignment.end,
             ),
 
             //MSG TIME
-            // Container(
-            //   child: Text(
-            //     DateFormat("hh:mm aa").format(
-            //         DateTime.fromMillisecondsSinceEpoch(
-            //             int.parse(document["timestamp"]))),
-            //     style: TextStyle(
-            //         color: Colors.grey,
-            //         fontSize: 12.0,
-            //         fontStyle: FontStyle.italic),
-            //   ),
-            //   margin: EdgeInsets.only(right: 10.0, top: 10.0, bottom: 5.0),
-            // )
+            document["type"] != 0
+                ? Container(
+                    child: Text(
+                      DateFormat("hh:mm aa").format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document["timestamp"]))),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontStyle: FontStyle.italic),
+                    ),
+                    margin:
+                        EdgeInsets.only(right: 10.0, top: 10.0, bottom: 5.0),
+                  )
+                : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.end,
         ),
@@ -671,13 +690,14 @@ class ChatScreenState extends State<ChatScreen> {
                         color: Colors.grey[200],
                         child: Row(
                           children: [
-                            RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: document["content"],
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ]),
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.4),
+                              child: Text(
+                                document["content"],
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 10.0, top: 5.0),
@@ -693,29 +713,6 @@ class ChatScreenState extends State<ChatScreen> {
                             ),
                           ],
                         ))
-
-                    //  Container(
-                    //     child: Text(
-                    //       document["content"],
-                    //       style: TextStyle(
-                    //           color: Colors.black, fontWeight: FontWeight.w400),
-                    //     ),
-                    //     padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    //     width: 200.0,
-                    //     decoration: BoxDecoration(
-                    //       color: Colors.grey[200],
-                    //       borderRadius: BorderRadius.circular(8.0),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: Colors.grey.withOpacity(0.5),
-                    //     spreadRadius: 1,
-                    //     blurRadius: 2,
-                    //     offset:
-                    //         Offset(0, 1), // changes position of shadow
-                    //   ),
-                    // ],
-                    // ),
-                    // margin: EdgeInsets.only(left: 10.0))
 
                     // Image Msg
                     : document["type"] == 1
@@ -763,35 +760,83 @@ class ChatScreenState extends State<ChatScreen> {
                                             url: document["content"])));
                               },
                             ),
-                            margin: EdgeInsets.only(left: 10.0),
+                            // margin: EdgeInsets.only(left: 5.0),
                           )
-                        : Container(
-                            child: Image.asset(
-                              "images/${document['content']}.gif",
-                              width: 100.0,
-                              height: 100.0,
-                              fit: BoxFit.cover,
-                            ),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMsgRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
-                          ),
+                        : document["type"] == 2
+                            ? Container(
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    child: CircularProgressIndicator(
+                                      valueColor:
+                                          AlwaysStoppedAnimation(kPrimaryColor),
+                                    ),
+                                    width: 200.0,
+                                    height: 200.0,
+                                    padding: EdgeInsets.all(70.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0)),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Material(
+                                    child: Image.asset(
+                                      "images/img_not_available.jpeg",
+                                      width: 200.0,
+                                      height: 200.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    clipBehavior: Clip.hardEdge,
+                                  ),
+                                  imageUrl: document["content"],
+                                  width: 200.0,
+                                  height: 200.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                // child: Image.network(
+                                //   document['content'],
+                                //   headers: {'accept': 'image/*'},
+                                //   width: 200.0,
+                                //   height: 200.0,
+                                // ),
+
+                                // child: Image.asset(
+                                //   "images/${document['content']}.gif",
+                                //   width: 100.0,
+                                //   height: 100.0,
+                                //   fit: BoxFit.cover,
+                                // ),
+                                // margin: EdgeInsets.only(bottom: 10.0, right: 10.0),
+                              )
+                            : Container(
+                                child: Image.asset(
+                                  "images/${document['content']}.gif",
+                                  width: 100.0,
+                                  height: 100.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                margin:
+                                    EdgeInsets.only(bottom: 10.0, right: 10.0),
+                              )
               ],
             ),
 
             //Msg Time
-            // Container(
-            //   child: Text(
-            //     DateFormat("hh:mm:aa").format(
-            //         DateTime.fromMillisecondsSinceEpoch(
-            //             int.parse(document["timestamp"]))),
-            //     style: TextStyle(
-            //         color: Colors.grey,
-            //         fontSize: 12.0,
-            //         fontStyle: FontStyle.italic),
-            //   ),
-            //   margin: EdgeInsets.only(left: 50.0, top: 10.0, bottom: 5.0),
-            // )
+            document["type"] != 0
+                ? Container(
+                    child: Text(
+                      DateFormat("hh:mm:aa").format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document["timestamp"]))),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontStyle: FontStyle.italic),
+                    ),
+                    margin: EdgeInsets.only(left: 50.0, top: 10.0, bottom: 5.0),
+                  )
+                : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
@@ -808,26 +853,41 @@ class ChatScreenState extends State<ChatScreen> {
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 1.0),
               child: IconButton(
-                icon: Icon(Icons.image),
+                key: gifBtnKey,
+                icon: Icon(Icons.attach_file),
                 color: kPrimaryColor,
-                onPressed: getImage,
+                onPressed: onAttachmentClick,
               ),
             ),
             color: Colors.white,
           ),
-          Material(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 1.0),
-              child: IconButton(
-                icon: Icon(
-                  Icons.insert_emoticon,
-                ),
-                color: kPrimaryColor,
-                onPressed: getSticker,
-              ),
-            ),
-            color: Colors.white,
-          ),
+
+          // Material(
+          //   child: Container(
+          //     margin: EdgeInsets.symmetric(horizontal: 1.0),
+          //     child: IconButton(
+          //       icon: Icon(Icons.image),
+          //       color: kPrimaryColor,
+          //       onPressed: getImage,
+          //     ),
+          //   ),
+          //   color: Colors.white,
+          // ),
+          // Material(
+          //   child: Container(
+          //     margin: EdgeInsets.symmetric(horizontal: 1.0),
+          //     child: IconButton(
+          //       icon: Icon(
+          //         Icons.gif,
+          //         size: 40,
+          //       ),
+          //       color: kPrimaryColor,
+          //       onPressed: getGif,
+          //       padding: EdgeInsets.only(bottom: 0.0),
+          //     ),
+          //   ),
+          //   color: Colors.white,
+          // ),
           Flexible(
             child: Container(
               child: TextField(
@@ -872,10 +932,13 @@ class ChatScreenState extends State<ChatScreen> {
   void onSendMessage(String contentMsg, int type) {
     //type=0 => text Msg
     //type=1 => Image File
-    //type=2 => Sticker
+    //type=2 => GIF
+    //type=3 => Sticker
 
     if (contentMsg != "") {
-      String body = type == 0 ? contentMsg : type == 1 ? "Image" : "GIF";
+      String body = type == 0
+          ? contentMsg
+          : type == 1 ? "Image" : type == 2 ? "GIF" : "Sticker";
       String image = type == 1 ? contentMsg : "";
 
       callOnFcmApiSendPushNotifications(recieverFcmToken, body, image);
@@ -929,15 +992,33 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  void onAttachmentClick() {
+    menu.show(widgetKey: gifBtnKey);
+  }
+
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 75);
     setState(() {
       if (pickedFile != null) {
         imageFile = File(pickedFile.path);
         isLoading = true;
       }
     });
-    uploadImageFile();
+
+    if (pickedFile != null) {
+      uploadImageFile();
+    }
+  }
+
+  Future getGif() async {
+    final gif = await GiphyPicker.pickGif(
+        context: context, apiKey: "KYrAqQVLVrPnE6ypT63O7e4u3yYiNI7J");
+
+    if (gif != null) {
+      onSendMessage(gif.images.original.url, 2);
+      print(gif.images.original.url);
+    }
   }
 
   Future uploadImageFile() async {

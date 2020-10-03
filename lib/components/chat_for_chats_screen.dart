@@ -1,6 +1,5 @@
-// import 'package:chat_app/modules/chat_detail_page.dart';
-import 'package:ChatApp/Screens/ChattingPage.dart';
-import 'package:ChatApp/Widgets/StatusIndicator.dart';
+import 'package:Chatify/Screens/ChatDetail/ChattingPage.dart';
+import 'package:Chatify/Widgets/StatusIndicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -78,21 +77,22 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
                                   height: 6,
                                 ),
                                 Text(
-                                  widget.data["type"] == 2
-                                      ? "GIF"
-                                      : widget.data["type"] == 1
-                                          ? "IMAGE"
-                                          : widget
-                                                      .data["content"]
-                                                      .toString()
-                                                      .length >
-                                                  30
-                                              ? widget.data["content"]
-                                                      .toString()
-                                                      .substring(0, 30) +
-                                                  "..."
+                                  widget.data["type"] == 3
+                                      ? "Sticker"
+                                      : widget.data["type"] == 2
+                                          ? "GIF"
+                                          : widget.data["type"] == 1
+                                              ? "IMAGE"
                                               : widget.data["content"]
-                                                  .toString(),
+                                                          .toString()
+                                                          .length >
+                                                      30
+                                                  ? widget.data["content"]
+                                                          .toString()
+                                                          .substring(0, 30) +
+                                                      "..."
+                                                  : widget.data["content"]
+                                                      .toString(),
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey.shade500),

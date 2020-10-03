@@ -1,7 +1,7 @@
-import 'package:ChatApp/Utils/utils.dart';
-import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/enum/user_state.dart';
-import 'package:ChatApp/resources/user_state_methods.dart';
+import 'package:Chatify/Utils/utils.dart';
+import 'package:Chatify/constants.dart';
+import 'package:Chatify/enum/user_state.dart';
+import 'package:Chatify/resources/user_state_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

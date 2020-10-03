@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ChatApp/Screens/Login/components/body.dart';
+import 'package:Chatify/Screens/Login/components/body.dart';
 
 class LoginScreen extends StatelessWidget {
   @override

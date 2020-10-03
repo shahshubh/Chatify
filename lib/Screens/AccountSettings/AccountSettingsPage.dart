@@ -1,28 +1,22 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:ChatApp/Screens/Welcome/welcome_screen.dart';
-import 'package:ChatApp/Widgets/ProgressWidget.dart';
-import 'package:ChatApp/constants.dart';
-import 'package:ChatApp/resources/user_state_methods.dart';
+import 'package:Chatify/Widgets/ProgressWidget.dart';
+import 'package:Chatify/constants.dart';
+import 'package:Chatify/resources/user_state_methods.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // iconTheme: IconThemeData(
-        //   color: Colors.white,
-        // ),
         title: Text("Account Settings"),
         backgroundColor: kPrimaryColor,
         actions: [
@@ -31,10 +25,6 @@ class Settings extends StatelessWidget {
             onPressed: () => UserStateMethods().logoutuser(context),
           )
         ],
-        // title: Text(
-        //   "Account Settings",
-        //   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        // ),
         centerTitle: true,
       ),
       body: SettingsScreen(),
@@ -223,18 +213,6 @@ class SettingsScreenState extends State<SettingsScreen> {
                                 ],
                               ),
                             ),
-                      // IconButton(
-                      //   icon: Icon(
-                      //     Icons.camera_alt,
-                      //     size: 100.0,
-                      //     color: Colors.white54.withOpacity(0.3),
-                      //   ),
-                      //   onPressed: getImage,
-                      //   padding: EdgeInsets.all(0.0),
-                      //   splashColor: Colors.transparent,
-                      //   highlightColor: Colors.grey,
-                      //   iconSize: 200.0,
-                      // )
                       GestureDetector(
                         onTap: getImage,
                         child: Padding(
@@ -388,98 +366,6 @@ class SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
               )
-
-              // Column(
-              //   children: <Widget>[
-              //     Padding(
-              //       padding: EdgeInsets.all(1.0),
-              //       child: isLoading ? oldcircularprogress() : Container(),
-              //     ),
-
-              //     // Username
-
-              //     Container(
-              //       child: Text("Profile Name: ",
-              //           style: TextStyle(
-              //               fontStyle: FontStyle.italic,
-              //               fontWeight: FontWeight.bold,
-              //               color: Colors.lightBlueAccent)),
-              //       margin: EdgeInsets.only(left: 10.0, bottom: 5.0, top: 10.0),
-              //     ),
-
-              //     Container(
-              //         child: Theme(
-              //           data: Theme.of(context)
-              //               .copyWith(primaryColor: Colors.lightBlueAccent),
-              //           child: TextField(
-              //             decoration: InputDecoration(
-              //                 hintText: "Your Name",
-              //                 contentPadding: EdgeInsets.all(5.0),
-              //                 hintStyle: TextStyle(color: Colors.grey)),
-              //             controller: nameTextEditingController,
-              //             onChanged: (value) {
-              //               name = value;
-              //             },
-              //             focusNode: nameFocusNode,
-              //           ),
-              //         ),
-              //         margin: EdgeInsets.only(left: 30.0, right: 30.0)),
-
-              //     Container(
-              //       child: Text("Email: ",
-              //           style: TextStyle(
-              //               fontStyle: FontStyle.italic,
-              //               fontWeight: FontWeight.bold,
-              //               color: Colors.lightBlueAccent)),
-              //       margin: EdgeInsets.only(left: 10.0, bottom: 5.0, top: 10.0),
-              //     ),
-
-              //     Container(
-              //         child: Theme(
-              //           data: Theme.of(context)
-              //               .copyWith(primaryColor: Colors.lightBlueAccent),
-              //           child: TextField(
-              //             readOnly: true,
-              //             decoration: InputDecoration(
-              //                 hintText: "Email",
-              //                 contentPadding: EdgeInsets.all(5.0),
-              //                 hintStyle: TextStyle(color: Colors.grey)),
-              //             controller: emailTextEditingController,
-              //             focusNode: emailFocusNode,
-              //           ),
-              //         ),
-              //         margin: EdgeInsets.only(left: 30.0, right: 30.0))
-              //   ],
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              // ),
-
-              // Container(
-              //   child: FlatButton(
-              //     onPressed: updateData,
-              //     child: Text(
-              //       "Update",
-              //       style: TextStyle(fontSize: 16.0),
-              //     ),
-              //     color: Colors.lightBlueAccent,
-              //     highlightColor: Colors.grey,
-              //     splashColor: Colors.transparent,
-              //     textColor: Colors.white,
-              //     padding: EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
-              //   ),
-              //   margin: EdgeInsets.only(top: 50.0, bottom: 1.0),
-              // ),
-
-              // Padding(
-              //   padding: EdgeInsets.only(left: 50.0, right: 50.0),
-              //   child: RaisedButton(
-              //     color: Colors.red,
-              //     onPressed: logoutuser,
-              //     child: Text(
-              //       "Logout",
-              //       style: TextStyle(color: Colors.white, fontSize: 14.0),
-              //     ),
-              //   ),
-              // )
             ],
           ),
           padding: EdgeInsets.only(left: 15.0, right: 15.0),

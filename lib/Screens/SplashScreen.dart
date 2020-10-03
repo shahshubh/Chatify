@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'HomeScreen.dart';
-import 'package:ChatApp/Screens/Welcome/welcome_screen.dart';
+import 'package:Chatify/Screens/Welcome/welcome_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:video_player/video_player.dart';
 
@@ -21,6 +25,9 @@ class _SplashScreenState extends State<SplashScreen>
   // VoidCallback listener;
   var _visible = true;
 
+  final FirebaseMessaging _messaging = FirebaseMessaging();
+  String fcmToken;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -30,12 +37,33 @@ class _SplashScreenState extends State<SplashScreen>
     animation =
         new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
 
+    precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/icons/signup.svg'),
+        null);
+    precachePicture(
+        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/icons/chat.svg'),
+        null);
+    precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/icons/login.svg'),
+        null);
+    // animationController = new AnimationController(
+    //     vsync: this, duration: new Duration(seconds: 2));
+    // animation =
+    //     new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
+
     animation.addListener(() => this.setState(() {}));
     animationController.forward();
 
     setState(() {
       _visible = !_visible;
     });
+
+    _messaging.getToken().then((value) {
+      fcmToken = value;
+    });
+
     // listener = () {
     //   setState(() {});
     // };
@@ -56,6 +84,12 @@ class _SplashScreenState extends State<SplashScreen>
 
     await FirebaseAuth.instance.currentUser().then((user) {
       if (user != null) {
+        // store the fcm token
+        Firestore.instance
+            .collection("Users")
+            .document(preferences.getString("uid"))
+            .updateData({"fcmToken": fcmToken});
+
         Route route = MaterialPageRoute(
             builder: (c) =>
                 HomeScreen(currentuserid: preferences.getString("uid")));
