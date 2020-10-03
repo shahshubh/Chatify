@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'HomeScreen.dart';
 import 'package:Chatify/Screens/Welcome/welcome_screen.dart';
@@ -30,6 +32,18 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/icons/signup.svg'),
+        null);
+    precachePicture(
+        ExactAssetPicture(SvgPicture.svgStringDecoder, 'assets/icons/chat.svg'),
+        null);
+    precachePicture(
+        ExactAssetPicture(
+            SvgPicture.svgStringDecoder, 'assets/icons/login.svg'),
+        null);
     // animationController = new AnimationController(
     //     vsync: this, duration: new Duration(seconds: 2));
     // animation =
