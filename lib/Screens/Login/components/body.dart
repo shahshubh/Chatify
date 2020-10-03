@@ -1,17 +1,17 @@
-import 'package:ChatApp/Screens/HomeScreen.dart';
+import 'package:Chatify/Screens/HomeScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/Screens/Login/components/background.dart';
-import 'package:ChatApp/Screens/Signup/signup_screen.dart';
-import 'package:ChatApp/components/already_have_an_account_acheck.dart';
-import 'package:ChatApp/components/rounded_button.dart';
-import 'package:ChatApp/components/text_field_container.dart';
+import 'package:Chatify/Screens/Login/components/background.dart';
+import 'package:Chatify/Screens/Signup/signup_screen.dart';
+import 'package:Chatify/components/already_have_an_account_acheck.dart';
+import 'package:Chatify/components/rounded_button.dart';
+import 'package:Chatify/components/text_field_container.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ChatApp/widgets/Progresswidget.dart';
+import 'package:Chatify/widgets/Progresswidget.dart';
 
 class SignIn extends StatefulWidget {
   @override

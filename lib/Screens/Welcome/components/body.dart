@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ChatApp/Screens/Login/login_screen.dart';
-import 'package:ChatApp/Screens/Signup/signup_screen.dart';
-import 'package:ChatApp/Screens/Welcome/components/background.dart';
-import 'package:ChatApp/components/rounded_button.dart';
-import 'package:ChatApp/constants.dart';
+import 'package:Chatify/Screens/Login/login_screen.dart';
+import 'package:Chatify/Screens/Signup/signup_screen.dart';
+import 'package:Chatify/Screens/Welcome/components/background.dart';
+import 'package:Chatify/components/rounded_button.dart';
+import 'package:Chatify/constants.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:ChatApp/widgets/Progresswidget.dart';
+import 'package:Chatify/widgets/Progresswidget.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 

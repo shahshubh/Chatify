@@ -1,6 +1,5 @@
-// import 'package:chat_app/modules/chat_detail_page.dart';
-import 'package:ChatApp/Screens/ChattingPage.dart';
-import 'package:ChatApp/Widgets/StatusIndicator.dart';
+import 'package:Chatify/Screens/ChatDetail/ChattingPage.dart';
+import 'package:Chatify/Widgets/StatusIndicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
