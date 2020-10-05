@@ -39,7 +39,18 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: PhotoView(imageProvider: NetworkImage(url)),
+      child: PhotoView(
+        imageProvider: NetworkImage(url),
+        loadingChild: Center(
+          child: Container(
+            width: 50.0,
+            height: 50.0,
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(kPrimaryColor),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

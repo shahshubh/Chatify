@@ -47,10 +47,10 @@ class _BodyState extends State<Body> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              "WELCOME TO CHAT APP",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            // Text(
+            //   "WELCOME TO CHAT APP",
+            //   style: TextStyle(fontWeight: FontWeight.bold),
+            // ),
             SizedBox(height: size.height * 0.05),
             SvgPicture.asset(
               "assets/icons/chat.svg",

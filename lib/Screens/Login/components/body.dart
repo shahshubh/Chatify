@@ -49,10 +49,10 @@ class _SignInState extends State<SignIn> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                "LOGIN",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              // Text(
+              //   "LOGIN",
+              //   style: TextStyle(fontWeight: FontWeight.bold),
+              // ),
               SizedBox(height: size.height * 0.03),
               SvgPicture.asset(
                 "assets/icons/login.svg",
@@ -86,7 +86,7 @@ class _SignInState extends State<SignIn> {
                   cursorColor: kPrimaryColor,
                   decoration: InputDecoration(
                     icon: Icon(
-                      Icons.person,
+                      Icons.email,
                       color: kPrimaryColor,
                     ),
                     hintText: "Your Email",
