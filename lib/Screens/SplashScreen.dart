@@ -10,6 +10,7 @@ import 'HomeScreen.dart';
 import 'package:Chatify/Screens/Welcome/welcome_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:video_player/video_player.dart';
+import 'package:Chatify/constants.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -73,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   startTime() async {
-    var _duration = new Duration(seconds: 6);
+    var _duration = new Duration(seconds: 6, milliseconds: 500);
     return new Timer(_duration, navigateuser);
   }
 

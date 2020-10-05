@@ -128,10 +128,10 @@ class _SignUpState extends State<SignUp> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  "SIGNUP",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                // Text(
+                //   "SIGNUP",
+                //   style: TextStyle(fontWeight: FontWeight.bold),
+                // ),
                 SizedBox(height: size.height * 0.03),
                 SvgPicture.asset(
                   "assets/icons/signup.svg",

@@ -445,7 +445,7 @@ class ChatScreenState extends State<ChatScreen> {
           children: [
             isNewMsg(index)
                 ? Bubble(
-                    margin: BubbleEdges.only(top: 10, bottom: 10),
+                    margin: BubbleEdges.only(top: 20, bottom: 20),
                     alignment: Alignment.center,
                     color: Color.fromRGBO(212, 234, 244, 1.0),
                     child: Text(
@@ -469,7 +469,7 @@ class ChatScreenState extends State<ChatScreen> {
                         padding: BubbleEdges.all(10),
                         margin: BubbleEdges.only(top: 5),
                         alignment: Alignment.topRight,
-                        nip: BubbleNip.rightTop,
+                        // nip: BubbleNip.rightTop,
                         color: kPrimaryColor,
                         child: Row(
                           children: [
@@ -501,7 +501,14 @@ class ChatScreenState extends State<ChatScreen> {
                     // Image Msg
                     : document["type"] == 1
                         ? Container(
-                            child: FlatButton(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FullPhoto(
+                                            url: document["content"])));
+                              },
                               child: Material(
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) => Container(
@@ -536,49 +543,61 @@ class ChatScreenState extends State<ChatScreen> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 clipBehavior: Clip.hardEdge,
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FullPhoto(
-                                            url: document["content"])));
-                              },
+                              // onPressed: () {
+                              //   Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //           builder: (context) => FullPhoto(
+                              //               url: document["content"])));
+                              // },
                             ),
-                            margin: EdgeInsets.only(bottom: 10.0),
+                            // margin: EdgeInsets.only(bottom: 10.0),
                           )
 
                         // GIF Msg
                         : document["type"] == 2
                             ? Container(
-                                child: CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    child: CircularProgressIndicator(
-                                      valueColor:
-                                          AlwaysStoppedAnimation(kPrimaryColor),
-                                    ),
-                                    width: 200.0,
-                                    height: 200.0,
-                                    padding: EdgeInsets.all(70.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => FullPhoto(
+                                                url: document["content"])));
+                                  },
+                                  child: Material(
+                                    child: CachedNetworkImage(
+                                      placeholder: (context, url) => Container(
+                                        child: CircularProgressIndicator(
+                                          valueColor: AlwaysStoppedAnimation(
+                                              kPrimaryColor),
+                                        ),
+                                        width: 200.0,
+                                        height: 200.0,
+                                        padding: EdgeInsets.all(70.0),
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0)),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Material(
+                                        child: Image.asset(
+                                          "images/img_not_available.jpeg",
+                                          width: 200.0,
+                                          height: 200.0,
+                                          fit: BoxFit.cover,
+                                        ),
                                         borderRadius:
-                                            BorderRadius.circular(8.0)),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Material(
-                                    child: Image.asset(
-                                      "images/img_not_available.jpeg",
+                                            BorderRadius.circular(8.0),
+                                        clipBehavior: Clip.hardEdge,
+                                      ),
+                                      imageUrl: document["content"],
                                       width: 200.0,
                                       height: 200.0,
                                       fit: BoxFit.cover,
                                     ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    clipBehavior: Clip.hardEdge,
                                   ),
-                                  imageUrl: document["content"],
-                                  width: 200.0,
-                                  height: 200.0,
-                                  fit: BoxFit.cover,
                                 ),
 
                                 // child: Image.network(
@@ -620,8 +639,7 @@ class ChatScreenState extends State<ChatScreen> {
                           fontSize: 12.0,
                           fontStyle: FontStyle.italic),
                     ),
-                    margin:
-                        EdgeInsets.only(right: 10.0, top: 10.0, bottom: 5.0),
+                    margin: EdgeInsets.only(right: 5.0, top: 10.0, bottom: 5.0),
                   )
                 : Container()
           ],
@@ -638,7 +656,7 @@ class ChatScreenState extends State<ChatScreen> {
           children: [
             isNewMsg(index)
                 ? Bubble(
-                    margin: BubbleEdges.only(top: 10, bottom: 10),
+                    margin: BubbleEdges.only(top: 20, bottom: 20),
                     alignment: Alignment.center,
                     color: Color.fromRGBO(212, 234, 244, 1.0),
                     child: Text(
@@ -684,9 +702,9 @@ class ChatScreenState extends State<ChatScreen> {
                 document["type"] == 0
                     ? Bubble(
                         padding: BubbleEdges.all(10),
-                        margin: BubbleEdges.only(top: 5, left: 5),
+                        margin: BubbleEdges.only(top: 5),
                         alignment: Alignment.topRight,
-                        nip: BubbleNip.leftTop,
+                        // nip: BubbleNip.leftTop,
                         color: Colors.grey[200],
                         child: Row(
                           children: [
@@ -717,7 +735,14 @@ class ChatScreenState extends State<ChatScreen> {
                     // Image Msg
                     : document["type"] == 1
                         ? Container(
-                            child: FlatButton(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FullPhoto(
+                                            url: document["content"])));
+                              },
                               child: Material(
                                 child: CachedNetworkImage(
                                   placeholder: (context, url) => Container(
@@ -752,61 +777,60 @@ class ChatScreenState extends State<ChatScreen> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 clipBehavior: Clip.hardEdge,
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FullPhoto(
-                                            url: document["content"])));
-                              },
+                              // onPressed: () {
+                              //   Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //           builder: (context) => FullPhoto(
+                              //               url: document["content"])));
+                              // },
                             ),
                             // margin: EdgeInsets.only(left: 5.0),
                           )
                         : document["type"] == 2
                             ? Container(
-                                child: CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    child: CircularProgressIndicator(
-                                      valueColor:
-                                          AlwaysStoppedAnimation(kPrimaryColor),
-                                    ),
-                                    width: 200.0,
-                                    height: 200.0,
-                                    padding: EdgeInsets.all(70.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => FullPhoto(
+                                                url: document["content"])));
+                                  },
+                                  child: Material(
+                                    child: CachedNetworkImage(
+                                      placeholder: (context, url) => Container(
+                                        child: CircularProgressIndicator(
+                                          valueColor: AlwaysStoppedAnimation(
+                                              kPrimaryColor),
+                                        ),
+                                        width: 200.0,
+                                        height: 200.0,
+                                        padding: EdgeInsets.all(70.0),
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0)),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Material(
+                                        child: Image.asset(
+                                          "images/img_not_available.jpeg",
+                                          width: 200.0,
+                                          height: 200.0,
+                                          fit: BoxFit.cover,
+                                        ),
                                         borderRadius:
-                                            BorderRadius.circular(8.0)),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Material(
-                                    child: Image.asset(
-                                      "images/img_not_available.jpeg",
+                                            BorderRadius.circular(8.0),
+                                        clipBehavior: Clip.hardEdge,
+                                      ),
+                                      imageUrl: document["content"],
                                       width: 200.0,
                                       height: 200.0,
                                       fit: BoxFit.cover,
                                     ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    clipBehavior: Clip.hardEdge,
                                   ),
-                                  imageUrl: document["content"],
-                                  width: 200.0,
-                                  height: 200.0,
-                                  fit: BoxFit.cover,
                                 ),
-                                // child: Image.network(
-                                //   document['content'],
-                                //   headers: {'accept': 'image/*'},
-                                //   width: 200.0,
-                                //   height: 200.0,
-                                // ),
-
-                                // child: Image.asset(
-                                //   "images/${document['content']}.gif",
-                                //   width: 100.0,
-                                //   height: 100.0,
-                                //   fit: BoxFit.cover,
-                                // ),
                                 // margin: EdgeInsets.only(bottom: 10.0, right: 10.0),
                               )
                             : Container(
@@ -834,7 +858,7 @@ class ChatScreenState extends State<ChatScreen> {
                           fontSize: 12.0,
                           fontStyle: FontStyle.italic),
                     ),
-                    margin: EdgeInsets.only(left: 50.0, top: 10.0, bottom: 5.0),
+                    margin: EdgeInsets.only(left: 40.0, top: 10.0, bottom: 5.0),
                   )
                 : Container()
           ],
