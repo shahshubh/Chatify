@@ -17,7 +17,11 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Account Settings"),
+        title: Text(
+          "Account Settings",
+          style: TextStyle(
+              fontFamily: 'Courgette', letterSpacing: 1.25, fontSize: 24),
+        ),
         backgroundColor: kPrimaryColor,
         actions: [
           IconButton(

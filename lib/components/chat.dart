@@ -10,6 +10,7 @@ class ChatUsersList extends StatefulWidget {
   final String time;
   final bool isMessageRead;
   final String userId;
+  final String email;
   // final String screen;
   ChatUsersList(
       {@required this.name,
@@ -17,6 +18,7 @@ class ChatUsersList extends StatefulWidget {
       @required this.image,
       @required this.time,
       @required this.isMessageRead,
+      @required this.email,
       // @required this.screen,
       @required this.userId});
   @override
@@ -72,15 +74,22 @@ class _ChatUsersListState extends State<ChatUsersList> {
                             height: 6,
                           ),
                           Text(
-                            "Joined on " +
-                                DateFormat("dd MMMM, yyyy").format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(widget.time))),
+                            widget.email,
                             style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey.shade500,
                                 fontStyle: FontStyle.italic),
                           )
+                          // Text(
+                          //   "Joined on " +
+                          //       DateFormat("dd MMMM, yyyy").format(
+                          //           DateTime.fromMillisecondsSinceEpoch(
+                          //               int.parse(widget.time))),
+                          //   style: TextStyle(
+                          //       fontSize: 14,
+                          //       color: Colors.grey.shade500,
+                          //       fontStyle: FontStyle.italic),
+                          // )
                         ],
                       ),
                     ),

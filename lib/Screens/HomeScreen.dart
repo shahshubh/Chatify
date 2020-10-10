@@ -7,6 +7,7 @@ import 'package:Chatify/enum/user_state.dart';
 import 'package:Chatify/resources/user_state_methods.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -177,25 +178,37 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            title: Text('Chats'),
+      bottomNavigationBar: CurvedNavigationBar(
+        backgroundColor: Colors.white,
+        color: kPrimaryLightColor,
+        buttonBackgroundColor: kPrimaryLightColor,
+        items: [
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Icon(
+              Icons.chat,
+              color: _selectedIndex == 0 ? kPrimaryColor : Colors.black,
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.supervised_user_circle),
-            title: Text('Users'),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Icon(
+              Icons.supervised_user_circle,
+              color: _selectedIndex == 1 ? kPrimaryColor : Colors.black,
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            title: Text('Profile'),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Icon(
+              Icons.person_outline,
+              color: _selectedIndex == 2 ? kPrimaryColor : Colors.black,
+            ),
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: kPrimaryColor,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+        // currentIndex: _selectedIndex,
+        // selectedItemColor: kPrimaryColor,
+        // selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        // unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
         onTap: _onItemTapped,
       ),
     );
