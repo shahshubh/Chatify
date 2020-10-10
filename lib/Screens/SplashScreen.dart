@@ -111,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen>
               color: Colors.purple[200],
               child: TextLiquidFill(
                 text: 'Chatify',
-                waveColor: Colors.purple,
+                waveColor: kPrimaryColor,
                 boxBackgroundColor: Colors.white,
                 textStyle: TextStyle(
                   fontSize: 60.0,

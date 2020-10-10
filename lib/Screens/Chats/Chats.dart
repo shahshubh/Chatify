@@ -47,7 +47,11 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chatify'),
+        title: const Text(
+          'Chats',
+          style: TextStyle(
+              fontFamily: 'Courgette', letterSpacing: 1.25, fontSize: 24),
+        ),
         backgroundColor: kPrimaryColor,
         centerTitle: true,
         actions: [

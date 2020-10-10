@@ -831,7 +831,7 @@ class ChatScreenState extends State<ChatScreen> {
                                     ),
                                   ),
                                 ),
-                                // margin: EdgeInsets.only(bottom: 10.0, right: 10.0),
+                                margin: EdgeInsets.only(left: 10.0),
                               )
                             : Container(
                                 child: Image.asset(
@@ -1022,7 +1022,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   Future getImage() async {
     final pickedFile =
-        await picker.getImage(source: ImageSource.gallery, imageQuality: 75);
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
     setState(() {
       if (pickedFile != null) {
         imageFile = File(pickedFile.path);

@@ -33,7 +33,11 @@ class _UserListState extends State<UserList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chatify'),
+        title: const Text(
+          'Users',
+          style: TextStyle(
+              fontFamily: 'Courgette', letterSpacing: 1.25, fontSize: 24),
+        ),
         backgroundColor: kPrimaryColor,
         centerTitle: true,
         actions: [
@@ -79,12 +83,11 @@ class _UserListState extends State<UserList> {
                     itemBuilder: (context, index) {
                       return ChatUsersList(
                         name: snapshot.data.documents[index]["name"],
-                        // secondaryText: "Secondary Text",
                         image: snapshot.data.documents[index]["photoUrl"],
                         time: snapshot.data.documents[index]["createdAt"],
+                        email: snapshot.data.documents[index]["email"],
                         isMessageRead: true,
                         userId: snapshot.data.documents[index]["uid"],
-                        // screen: "UserListScreen"
                       );
                     },
                   );
