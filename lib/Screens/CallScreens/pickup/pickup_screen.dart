@@ -2,6 +2,7 @@ import 'package:Chatify/Models/call.dart';
 import 'package:Chatify/Screens/CallScreens/call_screen.dart';
 import 'package:Chatify/constants.dart';
 import 'package:Chatify/resources/call_methods.dart';
+import 'package:Chatify/utils/permissions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -92,10 +93,13 @@ class PickupScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.call),
                   color: Colors.green,
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CallScreen(call: call))),
+                  onPressed: () async =>
+                      await Permissions.cameraAndMicrophonePermissionsGranted()
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CallScreen(call: call)))
+                          : {},
                 )
               ],
             ),
