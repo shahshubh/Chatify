@@ -5,6 +5,7 @@ import 'package:Chatify/Screens/Chats/UserList.dart';
 import 'package:Chatify/constants.dart';
 import 'package:Chatify/enum/user_state.dart';
 import 'package:Chatify/resources/user_state_methods.dart';
+import 'package:Chatify/screens/CallScreens/pickup/pickup_layout.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -81,12 +82,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: homePageHeader(),
-      // body: futureSearchResults == null
-      //     ? displayNosearchResultScreen()
-      //     : displayUserFoundScreen(),
-      body: MyStatefulWidget(),
+    return PickupLayout(
+      uid: currentuserid,
+      scaffold: Scaffold(
+        body: MyStatefulWidget(),
+      ),
     );
   }
 }

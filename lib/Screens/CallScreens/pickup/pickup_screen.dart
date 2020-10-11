@@ -1,6 +1,8 @@
 import 'package:Chatify/Models/call.dart';
 import 'package:Chatify/Screens/CallScreens/call_screen.dart';
+import 'package:Chatify/constants.dart';
 import 'package:Chatify/resources/call_methods.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class PickupScreen extends StatelessWidget {
@@ -28,11 +30,42 @@ class PickupScreen extends StatelessWidget {
             SizedBox(
               height: 50,
             ),
-            Image.network(
-              call.callerPic,
-              height: 150,
-              width: 150,
+
+            ClipRRect(
+              borderRadius: BorderRadius.circular(90),
+              child: CachedNetworkImage(
+                placeholder: (context, url) => Container(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(kPrimaryColor),
+                  ),
+                  width: 180.0,
+                  height: 180.0,
+                  padding: EdgeInsets.all(70.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(8.0)),
+                ),
+                errorWidget: (context, url, error) => Material(
+                  child: Image.asset(
+                    "images/img_not_available.jpeg",
+                    width: 180.0,
+                    height: 180.0,
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                  clipBehavior: Clip.hardEdge,
+                ),
+                imageUrl: call.callerPic,
+                width: 180.0,
+                height: 180.0,
+                fit: BoxFit.cover,
+              ),
             ),
+            // Image.network(
+            //   call.callerPic,
+            //   height: 150,
+            //   width: 150,
+            // ),
             SizedBox(
               height: 15,
             ),
