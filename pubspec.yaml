@@ -43,7 +43,7 @@ dependencies:
   giphy_picker: ^1.0.6
   popup_menu: ^1.0.5
   curved_navigation_bar: ^0.3.4
-  agora_rtc_engine: ^3.1.2
+  agora_rtc_engine: ^1.0.8
   permission_handler: ^5.0.1+1
 
 dev_dependencies:
@@ -66,6 +66,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/audio/apple_ringtone.mp3
     - assets/images/
     - assets/icons/
     - assets/videos/intro1.mp4
@@ -78,6 +79,7 @@ flutter:
     - images/mimi7.gif
     - images/mimi8.gif
     - images/mimi9.gif
+    
   #  - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

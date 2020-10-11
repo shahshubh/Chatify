@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:Chatify/components/chat_detail_page_appbar.dart';
 import 'package:Chatify/components/sticker_gif.dart';
 import 'package:Chatify/constants.dart';
+import 'package:Chatify/screens/CallScreens/pickup/pickup_layout.dart';
 import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,36 +42,21 @@ class Chat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.lightBlue,
-      //   actions: [
-      //     Padding(
-      //       padding: EdgeInsets.all(0.0),
-      //       child: CircleAvatar(
-      //         backgroundColor: Colors.black,
-      //         backgroundImage: CachedNetworkImageProvider(receiverAvatar),
-      //       ),
-      //     ),
-      //   ],
-      //   iconTheme: IconThemeData(color: Colors.white),
-      //   title: Text(
-      //     receiverName,
-      //     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      //   ),
-      //   centerTitle: true,
-      // ),
-      appBar: ChatDetailPageAppBar(
-        receiverName: receiverName,
-        receiverAvatar: receiverAvatar,
-        receiverId: receiverId,
-        currUserId: currUserId,
-        currUserAvatar: currUserAvatar,
-        currUserName: currUserName,
-      ),
-      body: ChatScreen(
-        receiverId: receiverId,
-        receiverAvatar: receiverAvatar,
+    return PickupLayout(
+      uid: currUserId,
+      scaffold: Scaffold(
+        appBar: ChatDetailPageAppBar(
+          receiverName: receiverName,
+          receiverAvatar: receiverAvatar,
+          receiverId: receiverId,
+          currUserId: currUserId,
+          currUserAvatar: currUserAvatar,
+          currUserName: currUserName,
+        ),
+        body: ChatScreen(
+          receiverId: receiverId,
+          receiverAvatar: receiverAvatar,
+        ),
       ),
     );
   }

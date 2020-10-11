@@ -7,7 +7,7 @@ packages:
       name: agora_rtc_engine
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.2"
+    version: "1.0.15"
   animated_text_kit:
     dependency: "direct main"
     description:
@@ -317,13 +317,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.2"
-  json_annotation:
-    dependency: transitive
-    description:
-      name: json_annotation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.0"
   matcher:
     dependency: transitive
     description:
