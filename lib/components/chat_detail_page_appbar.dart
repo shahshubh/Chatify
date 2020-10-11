@@ -1,5 +1,6 @@
 import 'package:Chatify/Utils/call_utilites.dart';
 import 'package:Chatify/Widgets/StatusIndicator.dart';
+import 'package:Chatify/utils/permissions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -80,14 +81,17 @@ class ChatDetailPageAppBar extends StatelessWidget
                   Icons.video_call,
                   color: Colors.grey.shade700,
                 ),
-                onPressed: () => CallUtils.dial(
-                    currUserId: currUserId,
-                    currUserName: currUserName,
-                    currUserAvatar: currUserAvatar,
-                    receiverId: receiverId,
-                    receiverAvatar: receiverAvatar,
-                    receiverName: receiverName,
-                    context: context),
+                onPressed: () async =>
+                    await Permissions.cameraAndMicrophonePermissionsGranted()
+                        ? CallUtils.dial(
+                            currUserId: currUserId,
+                            currUserName: currUserName,
+                            currUserAvatar: currUserAvatar,
+                            receiverId: receiverId,
+                            receiverAvatar: receiverAvatar,
+                            receiverName: receiverName,
+                            context: context)
+                        : {},
               ),
             ],
           ),
