@@ -2,6 +2,7 @@ import 'package:Chatify/Screens/ChatDetail/ChattingPage.dart';
 import 'package:Chatify/Widgets/StatusIndicator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatUsersList extends StatefulWidget {
   final String name;
@@ -26,15 +27,40 @@ class ChatUsersList extends StatefulWidget {
 }
 
 class _ChatUsersListState extends State<ChatUsersList> {
+  String currentuserid;
+  String currentusername;
+  String currentuserphoto;
+  SharedPreferences preferences;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrUser();
+  }
+
+  getCurrUser() async {
+    preferences = await SharedPreferences.getInstance();
+    setState(() {
+      currentuserid = preferences.getString("uid");
+      currentusername = preferences.getString("name");
+      currentuserphoto = preferences.getString("photo");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return Chat(
-              receiverId: widget.userId,
-              receiverAvatar: widget.image,
-              receiverName: widget.name);
+            receiverId: widget.userId,
+            receiverAvatar: widget.image,
+            receiverName: widget.name,
+            currUserId: currentuserid,
+            currUserName: currentusername,
+            currUserAvatar: currentuserphoto,
+          );
         }));
       },
       child: Container(

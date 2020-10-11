@@ -1,3 +1,4 @@
+import 'package:Chatify/Utils/call_utilites.dart';
 import 'package:Chatify/Widgets/StatusIndicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,19 @@ class ChatDetailPageAppBar extends StatelessWidget
   final String receiverName;
   final String receiverId;
 
-  ChatDetailPageAppBar(
-      {Key key,
-      @required this.receiverAvatar,
-      @required this.receiverName,
-      @required this.receiverId});
+  final String currUserId;
+  final String currUserAvatar;
+  final String currUserName;
+
+  ChatDetailPageAppBar({
+    Key key,
+    @required this.receiverAvatar,
+    @required this.receiverName,
+    @required this.receiverId,
+    @required this.currUserAvatar,
+    @required this.currUserName,
+    @required this.currUserId,
+  });
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -66,10 +75,20 @@ class ChatDetailPageAppBar extends StatelessWidget
                   ],
                 ),
               ),
-              // Icon(
-              //   Icons.more_vert,
-              //   color: Colors.grey.shade700,
-              // ),
+              IconButton(
+                icon: Icon(
+                  Icons.video_call,
+                  color: Colors.grey.shade700,
+                ),
+                onPressed: () => CallUtils.dial(
+                    currUserId: currUserId,
+                    currUserName: currUserName,
+                    currUserAvatar: currUserAvatar,
+                    receiverId: receiverId,
+                    receiverAvatar: receiverAvatar,
+                    receiverName: receiverName,
+                    context: context),
+              ),
             ],
           ),
         ),

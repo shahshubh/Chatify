@@ -91,63 +91,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 }
 
-class UserResult extends StatelessWidget {
-  final User eachUser;
-  UserResult(this.eachUser);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(4.0),
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          children: <Widget>[
-            GestureDetector(
-              onTap: () => sendUserToChatPage(context),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.black,
-                  backgroundImage:
-                      CachedNetworkImageProvider(eachUser.photoUrl),
-                ),
-                title: Text(
-                  eachUser.name,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  "Joined: " +
-                      DateFormat("dd MMMM, yyyy - hh:mm:aa").format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(eachUser.createdAt))),
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14.0,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  sendUserToChatPage(BuildContext context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Chat(
-                receiverId: eachUser.uid,
-                receiverAvatar: eachUser.photoUrl,
-                receiverName: eachUser.name)));
-  }
-}
-
 class MyStatefulWidget extends StatefulWidget {
   MyStatefulWidget({Key key}) : super(key: key);
 
@@ -179,6 +122,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: CurvedNavigationBar(
+        height: 65.0,
         backgroundColor: Colors.white,
         color: kPrimaryLightColor,
         buttonBackgroundColor: kPrimaryLightColor,
