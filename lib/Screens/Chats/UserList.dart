@@ -14,6 +14,8 @@ class _UserListState extends State<UserList> {
   // List allUsers = [];
   var allUsersList;
   String currentuserid;
+  String currentusername;
+  String currentuserphoto;
   SharedPreferences preferences;
 
   @override
@@ -26,6 +28,8 @@ class _UserListState extends State<UserList> {
     preferences = await SharedPreferences.getInstance();
     setState(() {
       currentuserid = preferences.getString("uid");
+      currentusername = preferences.getString("name");
+      currentuserphoto = preferences.getString("photo");
     });
   }
 
@@ -46,7 +50,11 @@ class _UserListState extends State<UserList> {
             onPressed: () {
               showSearch(
                   context: context,
-                  delegate: DataSearch(allUsersList: allUsersList));
+                  delegate: DataSearch(
+                      allUsersList: allUsersList,
+                      currentuserid: currentuserid,
+                      currentusername: currentusername,
+                      currentuserphoto: currentuserphoto));
             },
           )
         ],
@@ -102,8 +110,15 @@ class _UserListState extends State<UserList> {
 }
 
 class DataSearch extends SearchDelegate {
-  DataSearch({this.allUsersList});
+  DataSearch(
+      {this.allUsersList,
+      this.currentuserid,
+      this.currentusername,
+      this.currentuserphoto});
   var allUsersList;
+  String currentuserid;
+  String currentusername;
+  String currentuserphoto;
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -170,9 +185,13 @@ class DataSearch extends SearchDelegate {
                 close(context, null);
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return Chat(
-                      receiverId: suggestionList[index]["uid"],
-                      receiverAvatar: suggestionList[index]["photoUrl"],
-                      receiverName: suggestionList[index]["name"]);
+                    receiverId: suggestionList[index]["uid"],
+                    receiverAvatar: suggestionList[index]["photoUrl"],
+                    receiverName: suggestionList[index]["name"],
+                    currUserId: currentuserid,
+                    currUserName: currentusername,
+                    currUserAvatar: currentuserphoto,
+                  );
                 }));
               },
               leading: Icon(Icons.person),

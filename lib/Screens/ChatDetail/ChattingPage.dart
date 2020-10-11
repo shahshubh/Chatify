@@ -24,11 +24,20 @@ class Chat extends StatelessWidget {
   final String receiverId;
   final String receiverAvatar;
   final String receiverName;
-  Chat(
-      {Key key,
-      @required this.receiverId,
-      @required this.receiverAvatar,
-      @required this.receiverName});
+
+  final String currUserId;
+  final String currUserAvatar;
+  final String currUserName;
+
+  Chat({
+    Key key,
+    @required this.receiverId,
+    @required this.receiverAvatar,
+    @required this.receiverName,
+    @required this.currUserId,
+    @required this.currUserAvatar,
+    @required this.currUserName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +61,13 @@ class Chat extends StatelessWidget {
       //   centerTitle: true,
       // ),
       appBar: ChatDetailPageAppBar(
-          receiverName: receiverName,
-          receiverAvatar: receiverAvatar,
-          receiverId: receiverId),
+        receiverName: receiverName,
+        receiverAvatar: receiverAvatar,
+        receiverId: receiverId,
+        currUserId: currUserId,
+        currUserAvatar: currUserAvatar,
+        currUserName: currUserName,
+      ),
       body: ChatScreen(
         receiverId: receiverId,
         receiverAvatar: receiverAvatar,

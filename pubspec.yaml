@@ -43,6 +43,8 @@ dependencies:
   giphy_picker: ^1.0.6
   popup_menu: ^1.0.5
   curved_navigation_bar: ^0.3.4
+  agora_rtc_engine: ^3.1.2
+  permission_handler: ^5.0.1+1
 
 dev_dependencies:
   flutter_launcher_icons: "^0.8.0"

@@ -3,6 +3,7 @@ import 'package:Chatify/Widgets/StatusIndicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatChatsScreen extends StatefulWidget {
   final DocumentSnapshot data;
@@ -15,6 +16,27 @@ class ChatChatsScreen extends StatefulWidget {
 }
 
 class _ChatChatsScreenState extends State<ChatChatsScreen> {
+  String currentuserid;
+  String currentusername;
+  String currentuserphoto;
+  SharedPreferences preferences;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrUser();
+  }
+
+  getCurrUser() async {
+    preferences = await SharedPreferences.getInstance();
+    setState(() {
+      currentuserid = preferences.getString("uid");
+      currentusername = preferences.getString("name");
+      currentuserphoto = preferences.getString("photo");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -33,9 +55,13 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
               // print(widget.data["content"]);
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return Chat(
-                    receiverId: snapshot.data["uid"],
-                    receiverAvatar: snapshot.data["photoUrl"],
-                    receiverName: snapshot.data["name"]);
+                  receiverId: snapshot.data["uid"],
+                  receiverAvatar: snapshot.data["photoUrl"],
+                  receiverName: snapshot.data["name"],
+                  currUserId: currentuserid,
+                  currUserName: currentusername,
+                  currUserAvatar: currentuserphoto,
+                );
               }));
             },
             child: Container(
