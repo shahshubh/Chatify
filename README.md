@@ -1,1 +1,1 @@
-# ChatApp-Flutter
+# Chatify
