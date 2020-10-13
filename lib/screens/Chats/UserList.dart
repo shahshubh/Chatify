@@ -1,4 +1,4 @@
-import 'package:Chatify/Screens/ChatDetail/ChattingPage.dart';
+import 'package:Chatify/screens/ChatDetail/ChattingPage.dart';
 import 'package:Chatify/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

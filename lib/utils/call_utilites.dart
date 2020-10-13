@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:Chatify/Models/call.dart';
-import 'package:Chatify/Screens/CallScreens/call_screen.dart';
+import 'package:Chatify/models/call.dart';
+import 'package:Chatify/screens/CallScreens/call_screen.dart';
 import 'package:Chatify/resources/call_methods.dart';
 import 'package:flutter/material.dart';
 

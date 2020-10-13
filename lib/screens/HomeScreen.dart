@@ -1,7 +1,7 @@
-import 'package:Chatify/Screens/AccountSettings/AccountSettingsPage.dart';
-import 'package:Chatify/Screens/Chats/Chats.dart';
-import 'package:Chatify/Screens/ChatDetail/ChattingPage.dart';
-import 'package:Chatify/Screens/Chats/UserList.dart';
+import 'package:Chatify/screens/AccountSettings/AccountSettingsPage.dart';
+import 'package:Chatify/screens/Chats/Chats.dart';
+import 'package:Chatify/screens/ChatDetail/ChattingPage.dart';
+import 'package:Chatify/screens/Chats/UserList.dart';
 import 'package:Chatify/constants.dart';
 import 'package:Chatify/enum/user_state.dart';
 import 'package:Chatify/resources/user_state_methods.dart';
@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 
-import 'package:Chatify/Models/user.dart';
+import 'package:Chatify/models/user.dart';
 
 class HomeScreen extends StatefulWidget {
   final String currentuserid;

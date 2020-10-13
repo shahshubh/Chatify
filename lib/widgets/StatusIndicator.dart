@@ -1,4 +1,4 @@
-import 'package:Chatify/Utils/utils.dart';
+import 'package:Chatify/utils/utils.dart';
 import 'package:Chatify/constants.dart';
 import 'package:Chatify/enum/user_state.dart';
 import 'package:Chatify/resources/user_state_methods.dart';

@@ -1,10 +1,10 @@
-import 'package:Chatify/Screens/HomeScreen.dart';
+import 'package:Chatify/screens/HomeScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:Chatify/Screens/Login/components/background.dart';
-import 'package:Chatify/Screens/Signup/signup_screen.dart';
+import 'package:Chatify/screens/Login/components/background.dart';
+import 'package:Chatify/screens/Signup/signup_screen.dart';
 import 'package:Chatify/components/already_have_an_account_acheck.dart';
 import 'package:Chatify/components/rounded_button.dart';
 import 'package:Chatify/components/text_field_container.dart';
