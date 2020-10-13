@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:Chatify/Widgets/ProgressWidget.dart';
+import 'package:Chatify/widgets/ProgressWidget.dart';
 import 'package:Chatify/constants.dart';
 import 'package:Chatify/resources/user_state_methods.dart';
 import 'package:cached_network_image/cached_network_image.dart';

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:Chatify/components/chat_detail_page_appbar.dart';
 import 'package:Chatify/components/sticker_gif.dart';
+import 'package:Chatify/configs/agora_configs.dart';
 import 'package:Chatify/constants.dart';
 import 'package:Chatify/screens/CallScreens/pickup/pickup_layout.dart';
 import 'package:bubble/bubble.dart';
@@ -11,8 +12,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:Chatify/Widgets/FullImageWidget.dart';
-import 'package:Chatify/Widgets/ProgressWidget.dart';
+import 'package:Chatify/widgets/FullImageWidget.dart';
+import 'package:Chatify/widgets/ProgressWidget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:giphy_picker/giphy_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -958,6 +959,8 @@ class ChatScreenState extends State<ChatScreen> {
     //type=2 => GIF
     //type=3 => Sticker
 
+    String currTime = DateTime.now().millisecondsSinceEpoch.toString();
+
     if (contentMsg != "") {
       String body = type == 0
           ? contentMsg
@@ -976,7 +979,7 @@ class ChatScreenState extends State<ChatScreen> {
         "id": receiverId,
         "content": contentMsg,
         "type": type,
-        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
+        "timestamp": currTime,
       }, merge: true);
 
       Firestore.instance
@@ -988,21 +991,21 @@ class ChatScreenState extends State<ChatScreen> {
         "id": id,
         "content": contentMsg,
         "type": type,
-        "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
+        "timestamp": currTime,
       }, merge: true);
 
       var docRef = Firestore.instance
           .collection("messages")
           .document(chatId)
           .collection(chatId)
-          .document(DateTime.now().millisecondsSinceEpoch.toString());
+          .document(currTime);
       Firestore.instance.runTransaction((transaction) async {
         await transaction.set(
           docRef,
           {
             "idFrom": id,
             "idTo": receiverId,
-            "timestamp": DateTime.now().millisecondsSinceEpoch.toString(),
+            "timestamp": currTime,
             "content": contentMsg,
             "type": type
           },
@@ -1035,8 +1038,8 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Future getGif() async {
-    final gif = await GiphyPicker.pickGif(
-        context: context, apiKey: "KYrAqQVLVrPnE6ypT63O7e4u3yYiNI7J");
+    final gif =
+        await GiphyPicker.pickGif(context: context, apiKey: GIPHY_API_KEY);
 
     if (gif != null) {
       onSendMessage(gif.images.original.url, 2);

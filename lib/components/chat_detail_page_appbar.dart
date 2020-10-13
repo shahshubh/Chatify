@@ -1,5 +1,5 @@
-import 'package:Chatify/Utils/call_utilites.dart';
-import 'package:Chatify/Widgets/StatusIndicator.dart';
+import 'package:Chatify/utils/call_utilites.dart';
+import 'package:Chatify/widgets/StatusIndicator.dart';
 import 'package:Chatify/utils/permissions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

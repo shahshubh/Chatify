@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'HomeScreen.dart';
-import 'package:Chatify/Screens/Welcome/welcome_screen.dart';
+import 'package:Chatify/screens/Welcome/welcome_screen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:video_player/video_player.dart';
 import 'package:Chatify/constants.dart';
