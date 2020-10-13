@@ -45,6 +45,7 @@ dependencies:
   curved_navigation_bar: ^0.3.4
   agora_rtc_engine: ^1.0.8
   permission_handler: ^5.0.1+1
+  flutter_ringtone_player: ^2.0.0
 
 dev_dependencies:
   flutter_launcher_icons: "^0.8.0"

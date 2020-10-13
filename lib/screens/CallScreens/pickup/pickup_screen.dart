@@ -5,6 +5,7 @@ import 'package:Chatify/resources/call_methods.dart';
 import 'package:Chatify/utils/permissions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class PickupScreen extends StatelessWidget {
   final Call call;
@@ -14,6 +15,14 @@ class PickupScreen extends StatelessWidget {
   PickupScreen({
     @required this.call,
   });
+
+  void pickCall(BuildContext context) async {
+    FlutterRingtonePlayer.stop();
+    await Permissions.cameraAndMicrophonePermissionsGranted()
+        ? Navigator.push(context,
+            MaterialPageRoute(builder: (context) => CallScreen(call: call)))
+        : {};
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,16 +100,9 @@ class PickupScreen extends StatelessWidget {
                   width: 25,
                 ),
                 IconButton(
-                  icon: Icon(Icons.call),
-                  color: Colors.green,
-                  onPressed: () async =>
-                      await Permissions.cameraAndMicrophonePermissionsGranted()
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CallScreen(call: call)))
-                          : {},
-                )
+                    icon: Icon(Icons.call),
+                    color: Colors.green,
+                    onPressed: () => pickCall(context))
               ],
             ),
           ],
