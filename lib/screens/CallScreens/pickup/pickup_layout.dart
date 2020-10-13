@@ -3,6 +3,7 @@ import 'package:Chatify/screens/CallScreens/pickup/pickup_screen.dart';
 import 'package:Chatify/resources/call_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class PickupLayout extends StatelessWidget {
   final Widget scaffold;
@@ -25,13 +26,18 @@ class PickupLayout extends StatelessWidget {
                 Call call = Call.fromMap(snapshot.data.data);
 
                 if (!call.hasDialled) {
+                  FlutterRingtonePlayer.playRingtone();
+                  // print("PLAY");
                   return PickupScreen(
                     call: call,
                   );
                 }
+                // print("STOP");
+                FlutterRingtonePlayer.stop();
                 return scaffold;
               }
-
+              // print("STOP");
+              FlutterRingtonePlayer.stop();
               return scaffold;
             })
         : Scaffold(
