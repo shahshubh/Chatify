@@ -2,6 +2,7 @@ import 'package:Chatify/screens/ChatDetail/ChattingPage.dart';
 import 'package:Chatify/widgets/StatusIndicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -102,27 +103,62 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
                                 SizedBox(
                                   height: 6,
                                 ),
-                                Text(
-                                  widget.data["type"] == 3
-                                      ? "Sticker"
-                                      : widget.data["type"] == 2
-                                          ? "GIF"
-                                          : widget.data["type"] == 1
-                                              ? "IMAGE"
-                                              : widget.data["content"]
-                                                          .toString()
-                                                          .length >
-                                                      30
-                                                  ? widget.data["content"]
-                                                          .toString()
-                                                          .substring(0, 30) +
-                                                      "..."
-                                                  : widget.data["content"]
-                                                      .toString(),
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey.shade500),
-                                ),
+                                RichText(
+                                    text: TextSpan(children: [
+                                  widget.data["showCheck"]
+                                      ? WidgetSpan(
+                                          child: Container(
+                                          child: Icon(
+                                            Icons.check,
+                                            color: Colors.blueAccent,
+                                            size: 16,
+                                          ),
+                                          padding: EdgeInsets.only(right: 5),
+                                        ))
+                                      : TextSpan(),
+                                  TextSpan(
+                                    text: widget.data["type"] == 3
+                                        ? "Sticker"
+                                        : widget.data["type"] == 2
+                                            ? "GIF"
+                                            : widget.data["type"] == 1
+                                                ? "IMAGE"
+                                                : widget.data["content"]
+                                                            .toString()
+                                                            .length >
+                                                        30
+                                                    ? widget.data["content"]
+                                                            .toString()
+                                                            .substring(0, 30) +
+                                                        "..."
+                                                    : widget.data["content"]
+                                                        .toString(),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade500),
+                                  ),
+                                ])),
+                                // Text(
+                                //   widget.data["type"] == 3
+                                //       ? "Sticker"
+                                //       : widget.data["type"] == 2
+                                //           ? "GIF"
+                                //           : widget.data["type"] == 1
+                                //               ? "IMAGE"
+                                //               : widget.data["content"]
+                                //                           .toString()
+                                //                           .length >
+                                //                       30
+                                //                   ? widget.data["content"]
+                                //                           .toString()
+                                //                           .substring(0, 30) +
+                                //                       "..."
+                                //                   : widget.data["content"]
+                                //                       .toString(),
+                                //   style: TextStyle(
+                                //       fontSize: 14,
+                                //       color: Colors.grey.shade500),
+                                // ),
                               ],
                             ),
                           ),

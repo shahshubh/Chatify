@@ -69,10 +69,6 @@ class ChatDetailPageAppBar extends StatelessWidget
                       uid: receiverId,
                       screen: "chatDetailScreen",
                     )
-                    // Text(
-                    //   "Online",
-                    //   style: TextStyle(color: Colors.green, fontSize: 12),
-                    // ),
                   ],
                 ),
               ),
