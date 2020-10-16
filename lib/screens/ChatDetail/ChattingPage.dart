@@ -485,7 +485,7 @@ class ChatScreenState extends State<ChatScreen> {
                             Padding(
                               padding: EdgeInsets.only(left: 10.0, top: 5.0),
                               child: Text(
-                                DateFormat("hh:mm:aa").format(
+                                DateFormat("hh:mm aa").format(
                                     DateTime.fromMillisecondsSinceEpoch(
                                         int.parse(document["timestamp"]))),
                                 style: TextStyle(
@@ -720,7 +720,7 @@ class ChatScreenState extends State<ChatScreen> {
                             Padding(
                               padding: EdgeInsets.only(left: 10.0, top: 5.0),
                               child: Text(
-                                DateFormat("hh:mm:aa").format(
+                                DateFormat("hh:mm aa").format(
                                     DateTime.fromMillisecondsSinceEpoch(
                                         int.parse(document["timestamp"]))),
                                 style: TextStyle(
@@ -850,7 +850,7 @@ class ChatScreenState extends State<ChatScreen> {
             document["type"] != 0
                 ? Container(
                     child: Text(
-                      DateFormat("hh:mm:aa").format(
+                      DateFormat("hh:mm aa").format(
                           DateTime.fromMillisecondsSinceEpoch(
                               int.parse(document["timestamp"]))),
                       style: TextStyle(
@@ -980,6 +980,7 @@ class ChatScreenState extends State<ChatScreen> {
         "content": contentMsg,
         "type": type,
         "timestamp": currTime,
+        "showCheck": true
       }, merge: true);
 
       Firestore.instance
@@ -992,6 +993,7 @@ class ChatScreenState extends State<ChatScreen> {
         "content": contentMsg,
         "type": type,
         "timestamp": currTime,
+        "showCheck": false
       }, merge: true);
 
       var docRef = Firestore.instance
