@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:Chatify/widgets/FullImageWidget.dart';
 import 'package:Chatify/widgets/ProgressWidget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:giphy_picker/giphy_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -378,6 +380,66 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  onDeleteMsg(DocumentSnapshot document) {
+    var docRef = Firestore.instance
+        .collection("messages")
+        .document(chatId)
+        .collection(chatId)
+        .document(document['timestamp']);
+    if (document['timestamp'] == listMessage[0]['timestamp']) {
+      //check type of document if image delete from storage
+      if (document['type'] == 1) {
+        FirebaseStorage.instance
+            .getReferenceFromUrl(document["content"])
+            .then((res) {
+          res.delete().then((value) => print("Deleted"));
+        });
+      }
+      docRef.updateData({
+        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
+        "type": 0,
+      });
+      //change content and type of document
+      //change from chatlist as well on both sides
+      Firestore.instance
+          .collection("Users")
+          .document(id)
+          .collection("chatList")
+          .document(receiverId)
+          .updateData({
+        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
+        "type": 0,
+      });
+
+      Firestore.instance
+          .collection("Users")
+          .document(receiverId)
+          .collection("chatList")
+          .document(id)
+          .updateData({
+        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
+        "type": 0,
+      });
+    } else {
+      if (document['type'] == 1) {
+        FirebaseStorage.instance
+            .getReferenceFromUrl(document["content"])
+            .then((res) {
+          res.delete().then((value) => print("Deleted"));
+        });
+      }
+      docRef.updateData({
+        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
+        "type": 0,
+      });
+    }
+    //else
+    //check type of document if image delete from storage getref from imageurl
+    //change content and type of document
+  }
+
+  //clear all chat(){}
+
   bool isLastMsgLeft(int index) {
     if ((index > 0 && listMessage != null) &&
             listMessage[index - 1]["idFrom"] == id ||
@@ -441,209 +503,233 @@ class ChatScreenState extends State<ChatScreen> {
     //Logged User Messages - right side
     if (document["idFrom"] == id) {
       return Container(
-        child: Column(
-          children: [
-            isNewMsg(index)
-                ? Bubble(
-                    margin: BubbleEdges.only(top: 20, bottom: 20),
-                    alignment: Alignment.center,
-                    color: Color.fromRGBO(212, 234, 244, 1.0),
-                    child: Text(
-                        isToday(index)
-                            ? "TODAY"
-                            : isYesterday(index)
-                                ? "YESTERDAY"
-                                : DateFormat("dd MMMM yyy").format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document["timestamp"]))),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 11.0)),
-                  )
-                : Container(),
+        alignment: Alignment.center,
+        child: FocusedMenuHolder(
+          blurSize: 0,
+          menuWidth: MediaQuery.of(context).size.width * 0.5,
+          duration: Duration(milliseconds: 200),
+          onPressed: () {},
+          menuItems: <FocusedMenuItem>[
+            FocusedMenuItem(
+                title: Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.redAccent),
+                ),
+                trailingIcon: Icon(
+                  Icons.delete,
+                  color: Colors.redAccent,
+                ),
+                onPressed: () {
+                  onDeleteMsg(document);
+                }),
+          ],
+          child: Column(
+            children: [
+              isNewMsg(index)
+                  ? Bubble(
+                      margin: BubbleEdges.only(top: 20, bottom: 20),
+                      alignment: Alignment.center,
+                      color: Color.fromRGBO(212, 234, 244, 1.0),
+                      child: Text(
+                          isToday(index)
+                              ? "TODAY"
+                              : isYesterday(index)
+                                  ? "YESTERDAY"
+                                  : DateFormat("dd MMMM yyy").format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          int.parse(document["timestamp"]))),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 11.0)),
+                    )
+                  : Container(),
 
-            Row(
-              children: [
-                // Text Msg
-                document["type"] == 0
-                    ? Bubble(
-                        padding: BubbleEdges.all(10),
-                        margin: BubbleEdges.only(top: 5),
-                        alignment: Alignment.topRight,
-                        // nip: BubbleNip.rightTop,
-                        color: kPrimaryColor,
-                        child: Row(
-                          children: [
-                            Container(
-                              constraints: BoxConstraints(
-                                  maxWidth:
-                                      MediaQuery.of(context).size.width * 0.4),
-                              child: Text(
-                                document["content"],
-                                style: TextStyle(color: Colors.white),
+              Row(
+                children: [
+                  // Text Msg
+                  document["type"] == 0
+                      ? Bubble(
+                          padding: BubbleEdges.all(10),
+                          margin: BubbleEdges.only(top: 5),
+                          alignment: Alignment.topRight,
+                          // nip: BubbleNip.rightTop,
+                          color: kPrimaryColor,
+                          child: Row(
+                            children: [
+                              Container(
+                                constraints: BoxConstraints(
+                                    maxWidth:
+                                        MediaQuery.of(context).size.width *
+                                            0.4),
+                                child: Text(
+                                  document["content"],
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.0, top: 5.0),
-                              child: Text(
-                                DateFormat("hh:mm:aa").format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document["timestamp"]))),
-                                style: TextStyle(
-                                    color: Colors.white54,
-                                    fontSize: 12.0,
-                                    fontStyle: FontStyle.italic),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0, top: 5.0),
+                                child: Text(
+                                  DateFormat("hh:mm:aa").format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          int.parse(document["timestamp"]))),
+                                  style: TextStyle(
+                                      color: Colors.white54,
+                                      fontSize: 12.0,
+                                      fontStyle: FontStyle.italic),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
+                            ],
+                          ),
+                        )
 
-                    // Image Msg
-                    : document["type"] == 1
-                        ? Container(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FullPhoto(
-                                            url: document["content"])));
-                              },
-                              child: Material(
-                                child: CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    child: CircularProgressIndicator(
-                                      valueColor:
-                                          AlwaysStoppedAnimation(kPrimaryColor),
-                                    ),
-                                    width: 200.0,
-                                    height: 200.0,
-                                    padding: EdgeInsets.all(70.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius:
-                                            BorderRadius.circular(8.0)),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Material(
-                                    child: Image.asset(
-                                      "images/img_not_available.jpeg",
+                      // Image Msg
+                      : document["type"] == 1
+                          ? Container(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FullPhoto(
+                                              url: document["content"])));
+                                },
+                                child: Material(
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                      child: CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation(
+                                            kPrimaryColor),
+                                      ),
                                       width: 200.0,
                                       height: 200.0,
-                                      fit: BoxFit.cover,
+                                      padding: EdgeInsets.all(70.0),
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0)),
                                     ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    clipBehavior: Clip.hardEdge,
-                                  ),
-                                  imageUrl: document["content"],
-                                  width: 200.0,
-                                  height: 200.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.circular(8.0),
-                                clipBehavior: Clip.hardEdge,
-                              ),
-                              // onPressed: () {
-                              //   Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //           builder: (context) => FullPhoto(
-                              //               url: document["content"])));
-                              // },
-                            ),
-                            // margin: EdgeInsets.only(bottom: 10.0),
-                          )
-
-                        // GIF Msg
-                        : document["type"] == 2
-                            ? Container(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => FullPhoto(
-                                                url: document["content"])));
-                                  },
-                                  child: Material(
-                                    child: CachedNetworkImage(
-                                      placeholder: (context, url) => Container(
-                                        child: CircularProgressIndicator(
-                                          valueColor: AlwaysStoppedAnimation(
-                                              kPrimaryColor),
-                                        ),
+                                    errorWidget: (context, url, error) =>
+                                        Material(
+                                      child: Image.asset(
+                                        "images/img_not_available.jpeg",
                                         width: 200.0,
                                         height: 200.0,
-                                        padding: EdgeInsets.all(70.0),
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0)),
+                                        fit: BoxFit.cover,
                                       ),
-                                      errorWidget: (context, url, error) =>
-                                          Material(
-                                        child: Image.asset(
-                                          "images/img_not_available.jpeg",
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      clipBehavior: Clip.hardEdge,
+                                    ),
+                                    imageUrl: document["content"],
+                                    width: 200.0,
+                                    height: 200.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                // onPressed: () {
+                                //   Navigator.push(
+                                //       context,
+                                //       MaterialPageRoute(
+                                //           builder: (context) => FullPhoto(
+                                //               url: document["content"])));
+                                // },
+                              ),
+                              // margin: EdgeInsets.only(bottom: 10.0),
+                            )
+
+                          // GIF Msg
+                          : document["type"] == 2
+                              ? Container(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => FullPhoto(
+                                                  url: document["content"])));
+                                    },
+                                    child: Material(
+                                      child: CachedNetworkImage(
+                                        placeholder: (context, url) =>
+                                            Container(
+                                          child: CircularProgressIndicator(
+                                            valueColor: AlwaysStoppedAnimation(
+                                                kPrimaryColor),
+                                          ),
                                           width: 200.0,
                                           height: 200.0,
-                                          fit: BoxFit.cover,
+                                          padding: EdgeInsets.all(70.0),
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0)),
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        clipBehavior: Clip.hardEdge,
+                                        errorWidget: (context, url, error) =>
+                                            Material(
+                                          child: Image.asset(
+                                            "images/img_not_available.jpeg",
+                                            width: 200.0,
+                                            height: 200.0,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          clipBehavior: Clip.hardEdge,
+                                        ),
+                                        imageUrl: document["content"],
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
                                       ),
-                                      imageUrl: document["content"],
-                                      width: 200.0,
-                                      height: 200.0,
-                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                ),
 
-                                // child: Image.network(
-                                //   document['content'],
-                                //   headers: {'accept': 'image/*'},
-                                //   width: 200.0,
-                                //   height: 200.0,
-                                // ),
-                                // child: Image.asset(
-                                //   "images/${document['content']}.gif",
-                                //   width: 100.0,
-                                //   height: 100.0,
-                                //   fit: BoxFit.cover,
-                                // ),
-                                // margin: EdgeInsets.only(bottom: 10.0),
-                              )
-                            : Container(
-                                child: Image.asset(
-                                  "images/${document['content']}.gif",
-                                  width: 100.0,
-                                  height: 100.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                margin: EdgeInsets.only(bottom: 10.0),
-                              )
-              ],
-              mainAxisAlignment: MainAxisAlignment.end,
-            ),
+                                  // child: Image.network(
+                                  //   document['content'],
+                                  //   headers: {'accept': 'image/*'},
+                                  //   width: 200.0,
+                                  //   height: 200.0,
+                                  // ),
+                                  // child: Image.asset(
+                                  //   "images/${document['content']}.gif",
+                                  //   width: 100.0,
+                                  //   height: 100.0,
+                                  //   fit: BoxFit.cover,
+                                  // ),
+                                  // margin: EdgeInsets.only(bottom: 10.0),
+                                )
+                              : Container(
+                                  child: Image.asset(
+                                    "images/${document['content']}.gif",
+                                    width: 100.0,
+                                    height: 100.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  margin: EdgeInsets.only(bottom: 10.0),
+                                )
+                ],
+                mainAxisAlignment: MainAxisAlignment.end,
+              ),
 
-            //MSG TIME
-            document["type"] != 0
-                ? Container(
-                    child: Text(
-                      DateFormat("hh:mm aa").format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document["timestamp"]))),
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12.0,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    margin: EdgeInsets.only(right: 5.0, top: 10.0, bottom: 5.0),
-                  )
-                : Container()
-          ],
-          crossAxisAlignment: CrossAxisAlignment.end,
+              //MSG TIME
+              document["type"] != 0
+                  ? Container(
+                      child: Text(
+                        DateFormat("hh:mm aa").format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                int.parse(document["timestamp"]))),
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12.0,
+                            fontStyle: FontStyle.italic),
+                      ),
+                      margin:
+                          EdgeInsets.only(right: 5.0, top: 10.0, bottom: 5.0),
+                    )
+                  : Container()
+            ],
+            crossAxisAlignment: CrossAxisAlignment.end,
+          ),
         ),
         margin: EdgeInsets.only(bottom: 10.0),
       );
