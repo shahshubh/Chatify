@@ -212,6 +212,8 @@ class _SignInState extends State<SignIn> {
           .document(firebaseUser.uid)
           .get()
           .then((datasnapshot) async {
+        print(datasnapshot.data["photoUrl"]);
+
         await preferences.setString("uid", datasnapshot.data["uid"]);
         await preferences.setString("name", datasnapshot.data["name"]);
         await preferences.setString("photo", datasnapshot.data["photoUrl"]);

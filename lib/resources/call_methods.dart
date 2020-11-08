@@ -18,6 +18,11 @@ class CallMethods {
 
       await callCollection.document(call.callerId).setData(hasDialledMap);
       await callCollection.document(call.receiverId).setData(hasNotDialledMap);
+      callCollection
+          .document(call.callerId)
+          .get()
+          .then((value) => print(value.data));
+
       return true;
     } catch (e) {
       print(e);

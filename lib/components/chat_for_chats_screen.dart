@@ -38,6 +38,26 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
     });
   }
 
+  String checkDate() {
+    DateTime today = DateTime.now();
+    DateTime curr = DateTime.fromMillisecondsSinceEpoch(
+        int.parse(widget.data["timestamp"]));
+    if (curr.year == today.year &&
+        curr.month == today.month &&
+        curr.day == today.day) {
+      return DateFormat("hh:mm aa").format(DateTime.fromMillisecondsSinceEpoch(
+          int.parse(widget.data["timestamp"])));
+    } else if (curr.year == today.year &&
+        curr.month == today.month &&
+        curr.day == (today.day - 1)) {
+      return "Yesterday";
+    } else {
+      return DateFormat("dd / MM / yyyy").format(
+          DateTime.fromMillisecondsSinceEpoch(
+              int.parse(widget.data["timestamp"])));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -123,16 +143,20 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
                                             ? "GIF"
                                             : widget.data["type"] == 1
                                                 ? "IMAGE"
-                                                : widget.data["content"]
-                                                            .toString()
-                                                            .length >
-                                                        30
+                                                : widget.data["type"] == -1
                                                     ? widget.data["content"]
-                                                            .toString()
-                                                            .substring(0, 30) +
-                                                        "..."
+                                                        .toString()
                                                     : widget.data["content"]
-                                                        .toString(),
+                                                                .toString()
+                                                                .length >
+                                                            30
+                                                        ? widget.data["content"]
+                                                                .toString()
+                                                                .substring(
+                                                                    0, 30) +
+                                                            "..."
+                                                        : widget.data["content"]
+                                                            .toString(),
                                     style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey.shade500),
@@ -167,9 +191,7 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
                     ),
                   ),
                   Text(
-                    DateFormat("hh:mm aa").format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(widget.data["timestamp"]))),
+                    checkDate(),
                     style: TextStyle(
                       fontSize: 12,
                       // color: widget.isMessageRead
