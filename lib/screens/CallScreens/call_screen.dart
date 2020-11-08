@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:Chatify/models/call.dart';
-import 'package:Chatify/configs/agora_configs.dart';
+import 'package:Chatify/configs/configs.dart';
 import 'package:Chatify/resources/call_methods.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

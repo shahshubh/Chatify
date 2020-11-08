@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:Chatify/components/chat_detail_page_appbar.dart';
 import 'package:Chatify/components/sticker_gif.dart';
-import 'package:Chatify/configs/agora_configs.dart';
+import 'package:Chatify/configs/configs.dart';
 import 'package:Chatify/constants.dart';
 import 'package:Chatify/screens/CallScreens/pickup/pickup_layout.dart';
 import 'package:bubble/bubble.dart';
@@ -225,8 +225,7 @@ class ChatScreenState extends State<ChatScreen> {
 
     final headers = {
       'content-type': 'application/json',
-      'Authorization':
-          "key=AAAAeXmVt7g:APA91bFMfbZftiYhpPWy3OdQ-XoMYm8f7BEOuNblHFpueqFRqoPmoTVUH3UrfUPI5d22bshwQKuPCqT0LB3gxfzAkf5cqpaxSEvfRtPHt7SWpbLt9FOACfa55J0dGHlP62RQRpgf9sJ6" // 'key=YOUR_SERVER_KEY'
+      'Authorization': "key=$FCM_SERVER_KEY" // 'key=YOUR_SERVER_KEY'
     };
 
     final response = await http.post(postUrl,
@@ -395,9 +394,10 @@ class ChatScreenState extends State<ChatScreen> {
           res.delete().then((value) => print("Deleted"));
         });
       }
+      // 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥
       docRef.updateData({
-        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
-        "type": 0,
+        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘴𝘨 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
+        "type": -1,
       });
       //change content and type of document
       //change from chatlist as well on both sides
@@ -407,8 +407,8 @@ class ChatScreenState extends State<ChatScreen> {
           .collection("chatList")
           .document(receiverId)
           .updateData({
-        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
-        "type": 0,
+        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘴𝘨 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
+        "type": -1,
       });
 
       Firestore.instance
@@ -417,8 +417,8 @@ class ChatScreenState extends State<ChatScreen> {
           .collection("chatList")
           .document(id)
           .updateData({
-        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
-        "type": 0,
+        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘴𝘨 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
+        "type": -1,
       });
     } else {
       if (document['type'] == 1) {
@@ -429,8 +429,8 @@ class ChatScreenState extends State<ChatScreen> {
         });
       }
       docRef.updateData({
-        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
-        "type": 0,
+        "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘴𝘨 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
+        "type": -1,
       });
     }
     //else
@@ -504,170 +504,168 @@ class ChatScreenState extends State<ChatScreen> {
     if (document["idFrom"] == id) {
       return Container(
         alignment: Alignment.center,
-        child: FocusedMenuHolder(
-          blurSize: 0,
-          menuWidth: MediaQuery.of(context).size.width * 0.5,
-          duration: Duration(milliseconds: 200),
-          onPressed: () {},
-          menuItems: <FocusedMenuItem>[
-            FocusedMenuItem(
-                title: Text(
-                  "Delete",
-                  style: TextStyle(color: Colors.redAccent),
-                ),
-                trailingIcon: Icon(
-                  Icons.delete,
-                  color: Colors.redAccent,
-                ),
-                onPressed: () {
-                  onDeleteMsg(document);
-                }),
-          ],
-          child: Column(
-            children: [
-              isNewMsg(index)
-                  ? Bubble(
-                      margin: BubbleEdges.only(top: 20, bottom: 20),
-                      alignment: Alignment.center,
-                      color: Color.fromRGBO(212, 234, 244, 1.0),
-                      child: Text(
-                          isToday(index)
-                              ? "TODAY"
-                              : isYesterday(index)
-                                  ? "YESTERDAY"
-                                  : DateFormat("dd MMMM yyy").format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          int.parse(document["timestamp"]))),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 11.0)),
-                    )
-                  : Container(),
+        child: Column(
+          children: [
+            isNewMsg(index)
+                ? Bubble(
+                    margin: BubbleEdges.only(top: 20, bottom: 20),
+                    alignment: Alignment.center,
+                    color: Color.fromRGBO(212, 234, 244, 1.0),
+                    child: Text(
+                        isToday(index)
+                            ? "TODAY"
+                            : isYesterday(index)
+                                ? "YESTERDAY"
+                                : DateFormat("dd MMMM yyy").format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(document["timestamp"]))),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 11.0)),
+                  )
+                : Container(),
 
-              Row(
-                children: [
-                  // Text Msg
-                  document["type"] == 0
-                      ? Bubble(
-                          padding: BubbleEdges.all(10),
-                          margin: BubbleEdges.only(top: 5),
-                          alignment: Alignment.topRight,
-                          // nip: BubbleNip.rightTop,
-                          color: kPrimaryColor,
-                          child: Row(
-                            children: [
-                              Container(
-                                constraints: BoxConstraints(
-                                    maxWidth:
-                                        MediaQuery.of(context).size.width *
-                                            0.4),
-                                child: Text(
-                                  document["content"],
-                                  style: TextStyle(color: Colors.white),
-                                ),
+            Row(
+              children: [
+                document["type"] == -1
+                    ? Container(
+                        child: Bubble(
+                        padding: BubbleEdges.all(10),
+                        margin: BubbleEdges.only(top: 5),
+                        alignment: Alignment.topRight,
+                        // nip: BubbleNip.rightTop,
+                        color: kPrimaryColor,
+                        child: Row(
+                          children: [
+                            Container(
+                              constraints: BoxConstraints(
+                                  maxWidth:
+                                      MediaQuery.of(context).size.width * 0.4),
+                              child: Text(
+                                document["content"],
+                                style: TextStyle(color: Colors.white),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10.0, top: 5.0),
-                                child: Text(
-                                  DateFormat("hh:mm aa").format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          int.parse(document["timestamp"]))),
-                                  style: TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 12.0,
-                                      fontStyle: FontStyle.italic),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-
-                      // Image Msg
-                      : document["type"] == 1
-                          ? Container(
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => FullPhoto(
-                                              url: document["content"])));
-                                },
-                                child: Material(
-                                  child: CachedNetworkImage(
-                                    placeholder: (context, url) => Container(
-                                      child: CircularProgressIndicator(
-                                        valueColor: AlwaysStoppedAnimation(
-                                            kPrimaryColor),
-                                      ),
-                                      width: 200.0,
-                                      height: 200.0,
-                                      padding: EdgeInsets.all(70.0),
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          borderRadius:
-                                              BorderRadius.circular(8.0)),
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Material(
-                                      child: Image.asset(
-                                        "images/img_not_available.jpeg",
-                                        width: 200.0,
-                                        height: 200.0,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      clipBehavior: Clip.hardEdge,
-                                    ),
-                                    imageUrl: document["content"],
-                                    width: 200.0,
-                                    height: 200.0,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  clipBehavior: Clip.hardEdge,
-                                ),
-                                // onPressed: () {
-                                //   Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //           builder: (context) => FullPhoto(
-                                //               url: document["content"])));
-                                // },
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0, top: 5.0),
+                              child: Text(
+                                DateFormat("hh:mm aa").format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(document["timestamp"]))),
+                                style: TextStyle(
+                                    color: Colors.white54,
+                                    fontSize: 12.0,
+                                    fontStyle: FontStyle.italic),
                               ),
-                              // margin: EdgeInsets.only(bottom: 10.0),
                             )
+                          ],
+                        ),
+                      ))
 
-                          // GIF Msg
-                          : document["type"] == 2
-                              ? Container(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => FullPhoto(
-                                                  url: document["content"])));
-                                    },
-                                    child: Material(
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) =>
-                                            Container(
-                                          child: CircularProgressIndicator(
-                                            valueColor: AlwaysStoppedAnimation(
-                                                kPrimaryColor),
-                                          ),
-                                          width: 200.0,
-                                          height: 200.0,
-                                          padding: EdgeInsets.all(70.0),
-                                          decoration: BoxDecoration(
-                                              color: Colors.grey,
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0)),
+                    // Text Msg
+                    : FocusedMenuHolder(
+                        blurSize: 0,
+                        menuWidth: MediaQuery.of(context).size.width * 0.5,
+                        duration: Duration(milliseconds: 200),
+                        onPressed: () {},
+                        bottomOffsetHeight: 100,
+                        menuItems: <FocusedMenuItem>[
+                          FocusedMenuItem(
+                              title: Text(
+                                "Delete",
+                                style: TextStyle(color: Colors.redAccent),
+                              ),
+                              trailingIcon: Icon(
+                                Icons.delete,
+                                color: Colors.redAccent,
+                              ),
+                              onPressed: () {
+                                onDeleteMsg(document);
+                              }),
+                        ],
+                        child: Container(
+                          child: document["type"] == 0
+                              ? Bubble(
+                                  padding: BubbleEdges.all(10),
+                                  margin: BubbleEdges.only(top: 5),
+                                  alignment: Alignment.topRight,
+                                  // nip: BubbleNip.rightTop,
+                                  color: kPrimaryColor,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        constraints: BoxConstraints(
+                                            maxWidth: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.4),
+                                        child: Text(
+                                          document["content"],
+                                          style: TextStyle(color: Colors.white),
                                         ),
-                                        errorWidget: (context, url, error) =>
-                                            Material(
-                                          child: Image.asset(
-                                            "images/img_not_available.jpeg",
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 10.0, top: 5.0),
+                                        child: Text(
+                                          DateFormat("hh:mm aa").format(DateTime
+                                              .fromMillisecondsSinceEpoch(
+                                                  int.parse(
+                                                      document["timestamp"]))),
+                                          style: TextStyle(
+                                              color: Colors.white54,
+                                              fontSize: 12.0,
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+
+                              // Image Msg
+                              : document["type"] == 1
+                                  ? Container(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FullPhoto(
+                                                          url: document[
+                                                              "content"])));
+                                        },
+                                        child: Material(
+                                          child: CachedNetworkImage(
+                                            placeholder: (context, url) =>
+                                                Container(
+                                              child: CircularProgressIndicator(
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                        kPrimaryColor),
+                                              ),
+                                              width: 200.0,
+                                              height: 200.0,
+                                              padding: EdgeInsets.all(70.0),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0)),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Material(
+                                              child: Image.asset(
+                                                "images/img_not_available.jpeg",
+                                                width: 200.0,
+                                                height: 200.0,
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                              clipBehavior: Clip.hardEdge,
+                                            ),
+                                            imageUrl: document["content"],
                                             width: 200.0,
                                             height: 200.0,
                                             fit: BoxFit.cover,
@@ -676,60 +674,117 @@ class ChatScreenState extends State<ChatScreen> {
                                               BorderRadius.circular(8.0),
                                           clipBehavior: Clip.hardEdge,
                                         ),
-                                        imageUrl: document["content"],
-                                        width: 200.0,
-                                        height: 200.0,
-                                        fit: BoxFit.cover,
+                                        // onPressed: () {
+                                        //   Navigator.push(
+                                        //       context,
+                                        //       MaterialPageRoute(
+                                        //           builder: (context) => FullPhoto(
+                                        //               url: document["content"])));
+                                        // },
                                       ),
-                                    ),
-                                  ),
+                                      // margin: EdgeInsets.only(bottom: 10.0),
+                                    )
 
-                                  // child: Image.network(
-                                  //   document['content'],
-                                  //   headers: {'accept': 'image/*'},
-                                  //   width: 200.0,
-                                  //   height: 200.0,
-                                  // ),
-                                  // child: Image.asset(
-                                  //   "images/${document['content']}.gif",
-                                  //   width: 100.0,
-                                  //   height: 100.0,
-                                  //   fit: BoxFit.cover,
-                                  // ),
-                                  // margin: EdgeInsets.only(bottom: 10.0),
-                                )
-                              : Container(
-                                  child: Image.asset(
-                                    "images/${document['content']}.gif",
-                                    width: 100.0,
-                                    height: 100.0,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  margin: EdgeInsets.only(bottom: 10.0),
-                                )
-                ],
-                mainAxisAlignment: MainAxisAlignment.end,
-              ),
+                                  // GIF Msg
+                                  : document["type"] == 2
+                                      ? Container(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          FullPhoto(
+                                                              url: document[
+                                                                  "content"])));
+                                            },
+                                            child: Material(
+                                              child: CachedNetworkImage(
+                                                placeholder: (context, url) =>
+                                                    Container(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation(
+                                                            kPrimaryColor),
+                                                  ),
+                                                  width: 200.0,
+                                                  height: 200.0,
+                                                  padding: EdgeInsets.all(70.0),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.grey,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0)),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Material(
+                                                  child: Image.asset(
+                                                    "images/img_not_available.jpeg",
+                                                    width: 200.0,
+                                                    height: 200.0,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  clipBehavior: Clip.hardEdge,
+                                                ),
+                                                imageUrl: document["content"],
+                                                width: 200.0,
+                                                height: 200.0,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
 
-              //MSG TIME
-              document["type"] != 0
-                  ? Container(
-                      child: Text(
-                        DateFormat("hh:mm aa").format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                int.parse(document["timestamp"]))),
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12.0,
-                            fontStyle: FontStyle.italic),
+                                          // child: Image.network(
+                                          //   document['content'],
+                                          //   headers: {'accept': 'image/*'},
+                                          //   width: 200.0,
+                                          //   height: 200.0,
+                                          // ),
+                                          // child: Image.asset(
+                                          //   "images/${document['content']}.gif",
+                                          //   width: 100.0,
+                                          //   height: 100.0,
+                                          //   fit: BoxFit.cover,
+                                          // ),
+                                          // margin: EdgeInsets.only(bottom: 10.0),
+                                        )
+                                      : Container(
+                                          child: Image.asset(
+                                            "images/${document['content']}.gif",
+                                            width: 100.0,
+                                            height: 100.0,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          margin: EdgeInsets.only(bottom: 10.0),
+                                        ),
+                        ),
                       ),
-                      margin:
-                          EdgeInsets.only(right: 5.0, top: 10.0, bottom: 5.0),
-                    )
-                  : Container()
-            ],
-            crossAxisAlignment: CrossAxisAlignment.end,
-          ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.end,
+            ),
+
+            //MSG TIME
+            document["type"] != 0 && document["type"] != -1
+                ? Container(
+                    child: Text(
+                      DateFormat("hh:mm aa").format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document["timestamp"]))),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontStyle: FontStyle.italic),
+                    ),
+                    margin: EdgeInsets.only(right: 5.0, top: 10.0, bottom: 5.0),
+                  )
+                : Container()
+          ],
+          crossAxisAlignment: CrossAxisAlignment.end,
         ),
         margin: EdgeInsets.only(bottom: 10.0),
       );
@@ -784,13 +839,13 @@ class ChatScreenState extends State<ChatScreen> {
                         width: 35.0,
                       ),
 
-                // DISPLAY MESSAGES
-                document["type"] == 0
-                    ? Bubble(
+                document["type"] == -1
+                    ? Container(
+                        child: Bubble(
                         padding: BubbleEdges.all(10),
                         margin: BubbleEdges.only(top: 5),
                         alignment: Alignment.topRight,
-                        // nip: BubbleNip.leftTop,
+                        // nip: BubbleNip.rightTop,
                         color: Colors.grey[200],
                         child: Row(
                           children: [
@@ -814,66 +869,49 @@ class ChatScreenState extends State<ChatScreen> {
                                     fontSize: 12.0,
                                     fontStyle: FontStyle.italic),
                               ),
-                            ),
+                            )
                           ],
-                        ))
-
-                    // Image Msg
-                    : document["type"] == 1
-                        ? Container(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FullPhoto(
-                                            url: document["content"])));
-                              },
-                              child: Material(
-                                child: CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    child: CircularProgressIndicator(
-                                      valueColor:
-                                          AlwaysStoppedAnimation(kPrimaryColor),
-                                    ),
-                                    width: 200.0,
-                                    height: 200.0,
-                                    padding: EdgeInsets.all(70.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey,
-                                        borderRadius:
-                                            BorderRadius.circular(8.0)),
+                        ),
+                      ))
+                    :
+                    // DISPLAY MESSAGES
+                    document["type"] == 0
+                        ? Bubble(
+                            padding: BubbleEdges.all(10),
+                            margin: BubbleEdges.only(top: 5),
+                            alignment: Alignment.topRight,
+                            // nip: BubbleNip.leftTop,
+                            color: Colors.grey[200],
+                            child: Row(
+                              children: [
+                                Container(
+                                  constraints: BoxConstraints(
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width *
+                                              0.4),
+                                  child: Text(
+                                    document["content"],
+                                    style: TextStyle(color: Colors.black),
                                   ),
-                                  errorWidget: (context, url, error) =>
-                                      Material(
-                                    child: Image.asset(
-                                      "images/img_not_available.jpeg",
-                                      width: 200.0,
-                                      height: 200.0,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    clipBehavior: Clip.hardEdge,
-                                  ),
-                                  imageUrl: document["content"],
-                                  width: 200.0,
-                                  height: 200.0,
-                                  fit: BoxFit.cover,
                                 ),
-                                borderRadius: BorderRadius.circular(8.0),
-                                clipBehavior: Clip.hardEdge,
-                              ),
-                              // onPressed: () {
-                              //   Navigator.push(
-                              //       context,
-                              //       MaterialPageRoute(
-                              //           builder: (context) => FullPhoto(
-                              //               url: document["content"])));
-                              // },
-                            ),
-                            // margin: EdgeInsets.only(left: 5.0),
-                          )
-                        : document["type"] == 2
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 10.0, top: 5.0),
+                                  child: Text(
+                                    DateFormat("hh:mm aa").format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            int.parse(document["timestamp"]))),
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12.0,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                ),
+                              ],
+                            ))
+
+                        // Image Msg
+                        : document["type"] == 1
                             ? Container(
                                 child: GestureDetector(
                                   onTap: () {
@@ -915,25 +953,82 @@ class ChatScreenState extends State<ChatScreen> {
                                       height: 200.0,
                                       fit: BoxFit.cover,
                                     ),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    clipBehavior: Clip.hardEdge,
                                   ),
+                                  // onPressed: () {
+                                  //   Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //           builder: (context) => FullPhoto(
+                                  //               url: document["content"])));
+                                  // },
                                 ),
-                                margin: EdgeInsets.only(left: 10.0),
+                                // margin: EdgeInsets.only(left: 5.0),
                               )
-                            : Container(
-                                child: Image.asset(
-                                  "images/${document['content']}.gif",
-                                  width: 100.0,
-                                  height: 100.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                margin:
-                                    EdgeInsets.only(bottom: 10.0, right: 10.0),
-                              )
+                            : document["type"] == 2
+                                ? Container(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => FullPhoto(
+                                                    url: document["content"])));
+                                      },
+                                      child: Material(
+                                        child: CachedNetworkImage(
+                                          placeholder: (context, url) =>
+                                              Container(
+                                            child: CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                      kPrimaryColor),
+                                            ),
+                                            width: 200.0,
+                                            height: 200.0,
+                                            padding: EdgeInsets.all(70.0),
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0)),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Material(
+                                            child: Image.asset(
+                                              "images/img_not_available.jpeg",
+                                              width: 200.0,
+                                              height: 200.0,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            clipBehavior: Clip.hardEdge,
+                                          ),
+                                          imageUrl: document["content"],
+                                          width: 200.0,
+                                          height: 200.0,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    margin: EdgeInsets.only(left: 10.0),
+                                  )
+                                : Container(
+                                    child: Image.asset(
+                                      "images/${document['content']}.gif",
+                                      width: 100.0,
+                                      height: 100.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    margin: EdgeInsets.only(
+                                        bottom: 10.0, right: 10.0),
+                                  )
               ],
             ),
 
             //Msg Time
-            document["type"] != 0
+            document["type"] != 0 && document["type"] != -1
                 ? Container(
                     child: Text(
                       DateFormat("hh:mm aa").format(
@@ -1044,6 +1139,10 @@ class ChatScreenState extends State<ChatScreen> {
     //type=1 => Image File
     //type=2 => GIF
     //type=3 => Sticker
+
+    setState(() {
+      isDisplaySticker = false;
+    });
 
     String currTime = DateTime.now().millisecondsSinceEpoch.toString();
 
