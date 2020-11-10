@@ -182,23 +182,6 @@ class _SignInState extends State<SignIn> {
         isloading = false;
       });
       Scaffold.of(context).showSnackBar(SnackBar(content: Text(err.message)));
-
-      // showDialog(
-      //     context: context,
-      //     builder: (BuildContext context) {
-      //       return AlertDialog(
-      //         title: Text("Error"),
-      //         content: Text(err.message),
-      //         actions: [
-      //           FlatButton(
-      //             child: Text("Ok"),
-      //             onPressed: () {
-      //               Navigator.of(context).pop();
-      //             },
-      //           )
-      //         ],
-      //       );
-      //     });
     });
 
     if (firebaseUser != null) {

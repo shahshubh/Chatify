@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:Chatify/constants.dart';
 import 'package:Chatify/models/call.dart';
 import 'package:Chatify/configs/configs.dart';
+import 'package:Chatify/models/log.dart';
 import 'package:Chatify/resources/call_methods.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,6 +30,7 @@ class _CallScreenState extends State<CallScreen> {
   final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
+  bool hasUserJoined = false;
 
   @override
   void initState() {
@@ -84,6 +87,7 @@ class _CallScreenState extends State<CallScreen> {
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
       setState(() {
+        hasUserJoined = true;
         final info = 'onUserJoined: $uid';
         _infoStrings.add(info);
         _users.add(uid);
@@ -256,9 +260,35 @@ class _CallScreenState extends State<CallScreen> {
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
-            onPressed: () => callMethods.endCall(
-              call: widget.call,
-            ),
+            onPressed: () {
+              callMethods.endCall(
+                call: widget.call,
+              );
+
+              if (!hasUserJoined) {
+                Log log = Log(
+                    callerName: widget.call.callerName,
+                    callerPic: widget.call.callerPic,
+                    receiverName: widget.call.receiverName,
+                    receiverPic: widget.call.receiverPic,
+                    timestamp: DateTime.now().toString(),
+                    callStatus: CALL_STATUS_MISSED);
+
+                Firestore.instance
+                    .collection("Users")
+                    .document(widget.call.receiverId)
+                    .collection("callLogs")
+                    .document(log.timestamp)
+                    .setData({
+                  "callerName": log.callerName,
+                  "callerPic": log.callerPic,
+                  "receiverName": log.receiverName,
+                  "receiverPic": log.receiverPic,
+                  "timestamp": log.timestamp,
+                  "callStatus": log.callStatus
+                });
+              }
+            },
             child: Icon(
               Icons.call_end,
               color: Colors.white,

@@ -106,16 +106,6 @@ class _ChatUsersListState extends State<ChatUsersList> {
                                 color: Colors.grey.shade500,
                                 fontStyle: FontStyle.italic),
                           )
-                          // Text(
-                          //   "Joined on " +
-                          //       DateFormat("dd MMMM, yyyy").format(
-                          //           DateTime.fromMillisecondsSinceEpoch(
-                          //               int.parse(widget.time))),
-                          //   style: TextStyle(
-                          //       fontSize: 14,
-                          //       color: Colors.grey.shade500,
-                          //       fontStyle: FontStyle.italic),
-                          // )
                         ],
                       ),
                     ),
@@ -123,20 +113,6 @@ class _ChatUsersListState extends State<ChatUsersList> {
                 ],
               ),
             ),
-            // widget.screen == "ChatsScreen"
-            //     ? Text(
-            //         "Joined at " +
-            //             DateFormat("hh:mm aa").format(
-            //                 DateTime.fromMillisecondsSinceEpoch(
-            //                     int.parse(widget.time))),
-            //         style: TextStyle(
-            //             fontStyle: FontStyle.italic,
-            //             fontSize: 12,
-            //             color: widget.isMessageRead
-            //                 ? Colors.pink
-            //                 : Colors.grey.shade500),
-            //       )
-            //     : Container()
           ],
         ),
       ),

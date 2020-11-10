@@ -1,4 +1,5 @@
 import 'package:Chatify/screens/AccountSettings/AccountSettingsPage.dart';
+import 'package:Chatify/screens/CallLogs/log_screen.dart';
 import 'package:Chatify/screens/Chats/Chats.dart';
 import 'package:Chatify/screens/ChatDetail/ChattingPage.dart';
 import 'package:Chatify/screens/Chats/UserList.dart';
@@ -13,8 +14,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
-
-import 'package:Chatify/models/user.dart';
 
 class HomeScreen extends StatefulWidget {
   final String currentuserid;
@@ -102,7 +101,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  List<Widget> _widgetOptions = <Widget>[ChatsPage(), UserList(), Settings()];
+  List<Widget> _widgetOptions = <Widget>[
+    ChatsPage(),
+    UserList(),
+    LogScreen(),
+    Settings(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -113,11 +117,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Chat App'),
-      //   backgroundColor: kPrimaryColor,
-      //   centerTitle: true,
-      // ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
@@ -144,8 +143,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           Padding(
             padding: EdgeInsets.all(10.0),
             child: Icon(
-              Icons.person_outline,
+              Icons.call,
               color: _selectedIndex == 2 ? kPrimaryColor : Colors.black,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Icon(
+              Icons.person_outline,
+              color: _selectedIndex == 3 ? kPrimaryColor : Colors.black,
             ),
           ),
         ],

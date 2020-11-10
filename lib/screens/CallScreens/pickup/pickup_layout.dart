@@ -8,7 +8,6 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 class PickupLayout extends StatelessWidget {
   final Widget scaffold;
   final String uid;
-
   final CallMethods callMethods = CallMethods();
 
   PickupLayout({
@@ -21,6 +20,7 @@ class PickupLayout extends StatelessWidget {
     return uid != null
         ? StreamBuilder<DocumentSnapshot>(
             stream: callMethods.callStream(uid: uid),
+            // initialData: null,
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data.data != null) {
                 Call call = Call.fromMap(snapshot.data.data);
@@ -33,6 +33,7 @@ class PickupLayout extends StatelessWidget {
                   );
                 }
                 // print("STOP");
+                print("=====================////====");
                 FlutterRingtonePlayer.stop();
                 return scaffold;
               }
