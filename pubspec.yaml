@@ -33,10 +33,7 @@ dependencies:
   cached_network_image: 2.0.0-rc.1
   intl: ^0.15.7
   firebase_messaging: 6.0.13
-  flutter_local_notifications: 1.4.0
   photo_view: ^0.5.0
-  animated_text_kit: ^2.2.0
-  video_player: ^0.8.0
   http:
   font_awesome_flutter:
   bubble:
@@ -47,6 +44,7 @@ dependencies:
   permission_handler: ^5.0.1+1
   flutter_ringtone_player: ^2.0.0
   focused_menu: ^1.0.1
+  splash_screen_view: ^1.0.1
 
 dev_dependencies:
   flutter_launcher_icons: "^0.8.0"
@@ -55,7 +53,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/image2.png"
+  image_path: "assets/images/icon_new.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -68,10 +66,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/audio/apple_ringtone.mp3
     - assets/images/
     - assets/icons/
-    - assets/videos/intro1.mp4
     - images/mimi1.gif
     - images/mimi2.gif
     - images/mimi3.gif
@@ -93,15 +89,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Horizon
-      fonts:
-        - asset: assets/fonts/Horizon_Italic.otf
     - family: Courgette
       fonts:
         - asset: assets/fonts/Courgette-Regular.ttf
-    - family: Permanent
-      fonts:
-        - asset: assets/fonts/PermanentMarker-Regular.ttf
         
   #
   # For details regarding fonts from package dependencies,
