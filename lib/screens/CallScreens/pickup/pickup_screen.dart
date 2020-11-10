@@ -1,4 +1,5 @@
 import 'package:Chatify/models/call.dart';
+import 'package:Chatify/models/log.dart';
 import 'package:Chatify/screens/CallScreens/call_screen.dart';
 import 'package:Chatify/constants.dart';
 import 'package:Chatify/resources/call_methods.dart';
@@ -6,6 +7,7 @@ import 'package:Chatify/screens/CallScreens/pickup/circle_painter.dart';
 import 'package:Chatify/screens/CallScreens/pickup/curve_wave.dart';
 import 'package:Chatify/utils/permissions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
@@ -25,9 +27,11 @@ class _PickupScreenState extends State<PickupScreen>
   final CallMethods callMethods = CallMethods();
   AnimationController _controller;
   Color rippleColor = Colors.red;
+  bool isCallMissed = true;
 
   @override
   void initState() {
+    print("============INIT==================");
     super.initState();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 2000),
@@ -38,7 +42,37 @@ class _PickupScreenState extends State<PickupScreen>
   @override
   void dispose() {
     _controller.dispose();
+    print("=======DISPOSE=========");
+    // print(isCallMissed);
+    // if (isCallMissed) {
+    //   addCallLogsToDb(callStatus: CALL_STATUS_MISSED);
+    // }
     super.dispose();
+  }
+
+  // add call logs to db
+  addCallLogsToDb({@required String callStatus}) {
+    Log log = Log(
+        callerName: widget.call.callerName,
+        callerPic: widget.call.callerPic,
+        receiverName: widget.call.receiverName,
+        receiverPic: widget.call.receiverPic,
+        timestamp: DateTime.now().toString(),
+        callStatus: callStatus);
+
+    Firestore.instance
+        .collection("Users")
+        .document(widget.call.receiverId)
+        .collection("callLogs")
+        .document(log.timestamp)
+        .setData({
+      "callerName": log.callerName,
+      "callerPic": log.callerPic,
+      "receiverName": log.receiverName,
+      "receiverPic": log.receiverPic,
+      "timestamp": log.timestamp,
+      "callStatus": log.callStatus
+    });
   }
 
   Widget _button() {
@@ -98,6 +132,8 @@ class _PickupScreenState extends State<PickupScreen>
   }
 
   void pickCall(BuildContext context) async {
+    isCallMissed = false;
+    addCallLogsToDb(callStatus: CALL_STATUS_RECEIVED);
     FlutterRingtonePlayer.stop();
     await Permissions.cameraAndMicrophonePermissionsGranted()
         ? Navigator.push(
@@ -110,12 +146,10 @@ class _PickupScreenState extends State<PickupScreen>
   double shake(double animation) =>
       2 * (0.5 - (0.5 - Curves.bounceOut.transform(animation)).abs());
 
-  double _endVal = 1.0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimaryLightColor,
+      backgroundColor: Colors.black,
       body: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(vertical: 100),
@@ -140,6 +174,7 @@ class _PickupScreenState extends State<PickupScreen>
               "Incoming...",
               style: TextStyle(
                   fontSize: 30.0,
+                  color: Colors.white,
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w300),
             ),
@@ -157,7 +192,11 @@ class _PickupScreenState extends State<PickupScreen>
             ),
             Text(
               widget.call.callerName.toUpperCase(),
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 25,
+                color: Colors.white,
+              ),
             ),
             SizedBox(
               height: 75,
@@ -175,6 +214,8 @@ class _PickupScreenState extends State<PickupScreen>
                     icon: Icon(Icons.call_end),
                     color: Colors.white,
                     onPressed: () async {
+                      isCallMissed = false;
+                      addCallLogsToDb(callStatus: CALL_STATUS_RECEIVED);
                       await callMethods.endCall(call: widget.call);
                     },
                   ),

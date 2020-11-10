@@ -20,6 +20,8 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final String defaultPhotoUrl =
+      "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg";
   static const kPrimaryColor = Color(0xFF6F35A5);
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   final FirebaseMessaging _messaging = FirebaseMessaging();
@@ -78,9 +80,7 @@ class _SignUpState extends State<SignUp> {
           "uid": firebaseUser.uid,
           "email": firebaseUser.email,
           "name": nameEditingController.text,
-          "photoUrl":
-              "https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg",
-          // firebaseUser.photoUrl
+          "photoUrl": defaultPhotoUrl,
           "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
           "chattingWith": null,
           "state": 1,
@@ -88,10 +88,9 @@ class _SignUpState extends State<SignUp> {
           "fcmToken": fcmToken
         });
         FirebaseUser currentuser = firebaseUser;
-
         await preferences.setString("uid", currentuser.uid);
         await preferences.setString("name", nameEditingController.text);
-        await preferences.setString("photo", currentuser.photoUrl);
+        await preferences.setString("photo", defaultPhotoUrl);
         await preferences.setString("email", currentuser.email);
       } else {
         // FirebaseUser currentuser = firebaseUser;
