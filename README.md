@@ -15,9 +15,9 @@ Social Networking mobile app similar to Instagram in React Native.
 
 ## Download Apk File from below
 
-* <a href='./apk file/app-arm64-v8a-release.apk'>app-arm64-v8a-release</a>
-* <a href='./apk file/app-armeabi-v7a-release.apk'>app-armeabi-v7a-release</a>
-* <a href='./apk file/app-x86_64-release.apk'>app-x86_64-release</a>
+* <a href='https://drive.google.com/file/d/1joVvx4xqMh4QwJO0x4a4yDBKrdZwxqHU/view?usp=sharing'>app-arm64-v8a-release</a>
+* <a href='https://drive.google.com/file/d/1t4xe6qeycCJXyYccBBhgXa9n27f34MtZ/view?usp=sharing'>app-armeabi-v7a-release</a>
+* <a href='https://drive.google.com/file/d/1mZTFdGooTDk_9mKcN2cFDhBUtI6i0fDE/view?usp=sharing'>app-x86_64-release</a>
 
 
 ## Features
