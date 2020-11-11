@@ -10,14 +10,14 @@
 </div>
 
 
-Social Networking mobile app similar to Instagram in React Native.
+Chat Application in flutter.
 
 
 ## Download Apk File from below
 
 * <a href='https://drive.google.com/file/d/1joVvx4xqMh4QwJO0x4a4yDBKrdZwxqHU/view?usp=sharing'>app-arm64-v8a-release</a>
 * <a href='https://drive.google.com/file/d/1t4xe6qeycCJXyYccBBhgXa9n27f34MtZ/view?usp=sharing'>app-armeabi-v7a-release</a>
-* <a href='https://drive.google.com/file/d/1mZTFdGooTDk_9mKcN2cFDhBUtI6i0fDE/view?usp=sharing'>app-x86_64-release</a>
+* <a href=''>app-x86_64-release</a>
 
 
 ## Features
