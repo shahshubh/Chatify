@@ -74,64 +74,96 @@ class _LogListContainerState extends State<LogListContainer> {
                       bool hasDialled =
                           _log["callStatus"] == CALL_STATUS_DIALLED;
 
-                      return Container(
-                        padding: EdgeInsets.only(
-                            left: 16, right: 16, top: 10, bottom: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Row(
-                                children: <Widget>[
-                                  Stack(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundImage: NetworkImage(hasDialled
-                                            ? _log["receiverPic"]
-                                            : _log["callerPic"]),
-                                        maxRadius: 30,
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 16,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      color: Colors.transparent,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(hasDialled
-                                              ? _log["receiverName"]
-                                              : _log["callerName"]),
-                                          SizedBox(
-                                            height: 6,
-                                          ),
-                                          Row(
-                                            children: [
-                                              getIcon(_log["callStatus"]),
-                                              Text(
-                                                DateFormat(
-                                                        "dd MMMM yyy hh:mm aa")
-                                                    .format(DateTime.parse(
-                                                        _log["timestamp"])),
-                                                style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.grey.shade500,
-                                                    fontStyle:
-                                                        FontStyle.italic),
-                                              )
-                                            ],
-                                          ),
-                                        ],
+                      return InkWell(
+                        onLongPress: () => showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text("Delete this Log?"),
+                                  content: Text(
+                                      "Are you sure you want to delete this log?"),
+                                  actions: [
+                                    FlatButton(
+                                      child: Text("YES"),
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        Firestore.instance
+                                            .collection("Users")
+                                            .document(widget.currentuserid)
+                                            .collection("callLogs")
+                                            .document(_log["timestamp"])
+                                            .delete();
+                                        if (mounted) {
+                                          setState(() {});
+                                        }
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text("NO"),
+                                      onPressed: () => Navigator.pop(context),
+                                    ),
+                                  ],
+                                )),
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: 16, right: 16, top: 10, bottom: 10),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Row(
+                                  children: <Widget>[
+                                    Stack(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              hasDialled
+                                                  ? _log["receiverPic"]
+                                                  : _log["callerPic"]),
+                                          maxRadius: 30,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 16,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        color: Colors.transparent,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(hasDialled
+                                                ? _log["receiverName"]
+                                                : _log["callerName"]),
+                                            SizedBox(
+                                              height: 6,
+                                            ),
+                                            Row(
+                                              children: [
+                                                getIcon(_log["callStatus"]),
+                                                Text(
+                                                  DateFormat(
+                                                          "dd MMMM yyy hh:mm aa")
+                                                      .format(DateTime.parse(
+                                                          _log["timestamp"])),
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color:
+                                                          Colors.grey.shade500,
+                                                      fontStyle:
+                                                          FontStyle.italic),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -146,7 +178,7 @@ class _LogListContainerState extends State<LogListContainer> {
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "Calling people all over the world with just one click",
+                        "Call people with just one click",
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -167,7 +199,7 @@ class _LogListContainerState extends State<LogListContainer> {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Calling people all over the world with just one click",
+                      "Video Call people with just one click",
                       style: TextStyle(fontSize: 16),
                     ),
                   ],
