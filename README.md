@@ -17,7 +17,7 @@ Chat Application in flutter.
 
 * <a href='https://drive.google.com/file/d/1joVvx4xqMh4QwJO0x4a4yDBKrdZwxqHU/view?usp=sharing'>app-arm64-v8a-release</a>
 * <a href='https://drive.google.com/file/d/1t4xe6qeycCJXyYccBBhgXa9n27f34MtZ/view?usp=sharing'>app-armeabi-v7a-release</a>
-* <a href=''>app-x86_64-release</a>
+* <a href='https://drive.google.com/file/d/1mZTFdGooTDk_9mKcN2cFDhBUtI6i0fDE/view?usp=sharing'>app-x86_64-release</a>
 
 
 ## Features
@@ -67,9 +67,18 @@ Chat Application in flutter.
 <img height=480 width=240 style="margin: 10px;" src="./ss/6.jpg"/>
 
 
-<h4 align="center">User Profile Screen &nbsp&nbsp&nbsp&nbsp | &nbsp&nbsp&nbsp&nbsp Pickup Screen &nbsp&nbsp&nbsp&nbsp</h4>
+<h4 align="center">Chat Screen &nbsp&nbsp&nbsp&nbsp | &nbsp&nbsp&nbsp&nbsp User Profile Screen &nbsp&nbsp&nbsp&nbsp | &nbsp&nbsp&nbsp&nbsp Call Pickup Screen &nbsp&nbsp&nbsp&nbsp</h4>
+<img height=480 width=240 style="margin: 10px;" src="./ss/9.jpg"/>
 <img height=480 width=240 style="margin: 10px;" src="./ss/7.jpg"/>
 <img height=480 width=240 style="margin: 10px;" src="./ss/8.jpg"/>
 <!-- <img height=480 width=240 style="margin: 10px;" src="./ss/9.jpg"/> -->
 
 </div>
+
+
+## Stargazers
+[![Stargazers repo roster for @shahshubh/Chatify-Flutter](https://reporoster.com/stars/shahshubh/Chatify-Flutter)](https://github.com/shahshubh/Chatify-Flutter/stargazers)
+<!-- [![Forkers repo roster for @shahshubh/Chatify-Flutter](https://reporoster.com/forks/shahshubh/Chatify-Flutter)](https://github.com/shahshubh/Chatify-Flutter/network/members) -->
+
+<br/>
+<p align="center"><a href="https://github.com/shahshubh/Chatify-Flutter#"><img src="./ss/backToTopButton.png" alt="Back to top" height="29"/></a></p>

@@ -213,7 +213,9 @@ class _SignUpState extends State<SignUp> {
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          Icons.visibility,
+                          _passwordVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                           color: kPrimaryColor,
                         ),
                         onPressed: () {

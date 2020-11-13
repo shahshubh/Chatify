@@ -56,9 +56,6 @@ class _SplashScreenState extends State<SplashScreen>
     // setState(() {
     //   _visible = !_visible;
     // });
-    _messaging.getToken().then((value) {
-      fcmToken = value;
-    });
     // startTime();
   }
 
@@ -70,6 +67,8 @@ class _SplashScreenState extends State<SplashScreen>
   void navigateuser() async {
     preferences = await SharedPreferences.getInstance();
     currentuserid = preferences.getString("uid");
+
+    fcmToken = await _messaging.getToken();
 
     await FirebaseAuth.instance.currentUser().then((user) {
       if (user != null) {
