@@ -1,0 +1,98 @@
+name: Chatify
+description: A new Flutter project.
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.2
+  flutter_svg: ^0.19.0
+  firebase_auth: ^0.14.0+5
+  cloud_firestore: ^0.12.9+5
+  shared_preferences: ^0.5.3+4
+  fluttertoast: ^7.1.1
+  image_picker: ^0.6.4
+  firebase_storage: ^3.0.6
+  cached_network_image: 2.0.0-rc.1
+  intl: ^0.15.7
+  firebase_messaging: 6.0.13
+  photo_view: ^0.5.0
+  http:
+  font_awesome_flutter:
+  bubble:
+  giphy_picker: ^1.0.6
+  popup_menu: ^1.0.5
+  curved_navigation_bar: ^0.3.4
+  agora_rtc_engine: ^1.0.8
+  permission_handler: ^5.0.1+1
+  flutter_ringtone_player: ^2.0.0
+  focused_menu: ^1.0.1
+  splash_screen_view: ^1.0.1
+
+dev_dependencies:
+  flutter_launcher_icons: "^0.8.0"
+  flutter_test:
+    sdk: flutter
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/icon_new.png"
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+    - assets/icons/
+    - images/mimi1.gif
+    - images/mimi2.gif
+    - images/mimi3.gif
+    - images/mimi4.gif
+    - images/mimi5.gif
+    - images/mimi6.gif
+    - images/mimi7.gif
+    - images/mimi8.gif
+    - images/mimi9.gif
+    
+  #  - images/a_dot_ham.jpeg
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  fonts:
+    - family: Courgette
+      fonts:
+        - asset: assets/fonts/Courgette-Regular.ttf
+        
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
