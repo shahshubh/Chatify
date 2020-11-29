@@ -7,6 +7,7 @@ import 'package:Chatify/components/sticker_gif.dart';
 import 'package:Chatify/configs/configs.dart';
 import 'package:Chatify/constants.dart';
 import 'package:Chatify/screens/CallScreens/pickup/pickup_layout.dart';
+import 'package:Chatify/screens/ImageEdit/image_upload.dart';
 import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +15,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:Chatify/widgets/FullImageWidget.dart';
 import 'package:Chatify/widgets/ProgressWidget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:focused_menu/focused_menu.dart';
 import 'package:focused_menu/modals.dart';
@@ -23,6 +25,11 @@ import 'package:intl/intl.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:Chatify/screens/ImageEdit/blocs/CanvasBloc/canvas_bloc.dart';
+import 'package:Chatify/screens/ImageEdit/blocs/ColorBloc/colour_bloc.dart';
+import 'package:Chatify/screens/ImageEdit/blocs/DrawingBloc/drawing_bloc.dart';
+import 'package:Chatify/screens/ImageEdit/blocs/TextBloc/text_bloc.dart';
+import 'package:Chatify/screens/ImageEdit/blocs/imageEdit/imageedit_bloc.dart';
 
 class Chat extends StatelessWidget {
   final String receiverId;
@@ -1214,16 +1221,37 @@ class ChatScreenState extends State<ChatScreen> {
   Future getImage() async {
     final pickedFile =
         await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
-    setState(() {
-      if (pickedFile != null) {
+          if (pickedFile != null) {
         imageFile = File(pickedFile.path);
-        isLoading = true;
-      }
-    });
-
-    if (pickedFile != null) {
-      uploadImageFile();
+       File editedImage =  await Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return MultiBlocProvider(providers: [
+            BlocProvider<ImageeditBloc>(create: (_) => ImageeditBloc()..add(LoadImage(file: imageFile)),),
+            BlocProvider<DrawingBloc>(create: (_) => DrawingBloc()),
+            BlocProvider<ColourBloc>(create: (_)=>ColourBloc(drawingBloc: BlocProvider.of<DrawingBloc>(_)),),
+            BlocProvider<CanvasBloc>(create: (_) => CanvasBloc(BlocProvider.of<ImageeditBloc>(_),BlocProvider.of<ColourBloc>(_),BlocProvider.of<DrawingBloc>(_)),),
+            BlocProvider<TextBloc>(create: (_) => TextBloc(BlocProvider.of<DrawingBloc>(_),BlocProvider.of<ColourBloc>(_)),)
+          ],
+          child: ImageEdit(),
+          );
+        }));
+        if(editedImage != null){
+          setState(() {
+            imageFile = editedImage;
+            isLoading = true;
+          });
+        }
+        uploadImageFile();
     }
+    // setState(() {
+
+    //     // isLoading = true;
+         
+    //   }
+    // });
+
+    // if (pickedFile != null) {
+    //   uploadImageFile();
+    // }
   }
 
   Future getGif() async {

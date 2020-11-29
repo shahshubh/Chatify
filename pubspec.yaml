@@ -19,44 +19,44 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
-  flutter_svg: ^0.19.0
-  firebase_auth: ^0.14.0+5
-  cloud_firestore: ^0.12.9+5
-  shared_preferences: ^0.5.3+4
-  fluttertoast: ^7.1.1
-  image_picker: ^0.6.4
-  firebase_storage: ^3.0.6
-  cached_network_image: 2.0.0-rc.1
-  intl: ^0.15.7
-  firebase_messaging: 6.0.13
-  photo_view: ^0.5.0
-  http:
-  font_awesome_flutter:
-  bubble:
-  giphy_picker: ^1.0.6
-  popup_menu: ^1.0.5
-  curved_navigation_bar: ^0.3.4
   agora_rtc_engine: ^1.0.8
-  permission_handler: ^5.0.1+1
+  bubble: null
+  cached_network_image: 2.0.0-rc.1
+  cloud_firestore: ^0.12.9+5
+  cupertino_icons: ^0.1.2
+  curved_navigation_bar: ^0.3.4
+  firebase_auth: ^0.14.0+5
+  firebase_messaging: 6.0.13
+  firebase_storage: ^3.0.6
+  flutter_bloc: ^4.0.1
   flutter_ringtone_player: ^2.0.0
+  flutter_svg: ^0.19.0
+  fluttertoast: ^7.1.1
   focused_menu: ^1.0.1
+  font_awesome_flutter: null
+  giphy_picker: ^1.0.6
+  http: null
+  image_picker: ^0.6.4
+  intl: ^0.15.7
+  material_design_icons_flutter: ^4.0.5755
+  matrix_gesture_detector: ^0.1.0
+  permission_handler: ^5.0.1+1
+  photo_view: ^0.5.0
+  popup_menu: ^1.0.5
+  screenshot: ^0.2.0
+  shared_preferences: ^0.5.3+4
   splash_screen_view: ^1.0.1
 
 dev_dependencies:
-  flutter_launcher_icons: "^0.8.0"
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: "^0.8.0"
 flutter_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/icon_new.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is
@@ -77,7 +77,7 @@ flutter:
     - images/mimi7.gif
     - images/mimi8.gif
     - images/mimi9.gif
-    
+
   #  - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -92,7 +92,31 @@ flutter:
     - family: Courgette
       fonts:
         - asset: assets/fonts/Courgette-Regular.ttf
-        
-  #
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto-Bold.ttf
+          weight: 700
+    - family: Helvetica
+      fonts:
+        - asset: fonts/Helvetica-Bold-Font.ttf
+          weight: 700
+    - family: OpenSans
+      fonts:
+        - asset: fonts/OpenSans-Regular.ttf
+    - family: NimbusMono
+      fonts:
+        - asset: fonts/nimbusmono-regular.otf
+    - family: Modern
+      fonts:
+        - asset: fonts/modern.ttf
+    - family: Neon
+      fonts:
+        - asset: fonts/neon/neon.otf
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato-Regular.ttf
+        - asset: fonts/Lato-Bold.ttf
+          weight: 700
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
