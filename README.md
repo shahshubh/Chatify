@@ -77,7 +77,7 @@ Chat Application in flutter.
 
 
 ## Stargazers
-[![Stargazers repo roster for @shahshubh/Chatify-Flutter](https://reporoster.com/stars/shahshubh/Chatify-Flutter)](https://github.com/shahshubh/Chatify-Flutter/stargazers)
+[![Stargazers repo roster for @shahshubh/Chatify](https://reporoster.com/stars/shahshubh/Chatify)](https://github.com/shahshubh/Chatify/stargazers)
 <!-- [![Forkers repo roster for @shahshubh/Chatify-Flutter](https://reporoster.com/forks/shahshubh/Chatify-Flutter)](https://github.com/shahshubh/Chatify-Flutter/network/members) -->
 
 <br/>
