@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             : print("Paused State");
         break;
       case AppLifecycleState.detached:
-        currentuserid != null 
+        currentuserid != null
             ? UserStateMethods().setUserState(
                 userId: currentuserid, userState: UserState.Offline)
             : print("Detached State");

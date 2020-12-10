@@ -11,8 +11,7 @@ import 'package:Chatify/components/text_field_container.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:Chatify/widgets/Progresswidget.dart';
-import 'package:Chatify/widgets/ProgressWidget.dart';
+import 'package:Chatify/widgets/Progresswidget.dart';
 
 class SignIn extends StatefulWidget {
   @override
