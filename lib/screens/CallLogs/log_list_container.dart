@@ -68,6 +68,7 @@ class _LogListContainerState extends State<LogListContainer> {
               if (snapshot.hasData) {
                 if (snapshot.data.documents.length > 0) {
                   return ListView.builder(
+                    physics: BouncingScrollPhysics(),
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, i) {
                       var _log = snapshot.data.documents[i];

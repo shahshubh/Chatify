@@ -121,7 +121,13 @@ class ChatScreenState extends State<ChatScreen> {
 
     menu = PopupMenu(items: [
       MenuItem(
-          title: 'Image',
+          title: 'Camera',
+          image: Icon(
+            Icons.camera,
+            color: Colors.white,
+          )),
+      MenuItem(
+          title: 'Gallery',
           image: Icon(
             Icons.image,
             color: Colors.white,
@@ -147,8 +153,15 @@ class ChatScreenState extends State<ChatScreen> {
 
   void onClickMenu(MenuItemProvider item) {
     switch (item.menuTitle) {
-      case "Image":
-        getImage();
+      case "Camera":
+        getImage(isGallery: false);
+        setState(() {
+          isDisplaySticker = false;
+        });
+        break;
+
+      case "Gallery":
+        getImage(isGallery: true);
         setState(() {
           isDisplaySticker = false;
         });
@@ -526,9 +539,10 @@ class ChatScreenState extends State<ChatScreen> {
     menu.show(widgetKey: gifBtnKey);
   }
 
-  Future getImage() async {
-    final pickedFile =
-        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+  Future getImage({bool isGallery}) async {
+    final pickedFile = await picker.getImage(
+        source: isGallery ? ImageSource.gallery : ImageSource.camera,
+        imageQuality: 50);
     setState(() {
       if (pickedFile != null) {
         imageFile = File(pickedFile.path);
