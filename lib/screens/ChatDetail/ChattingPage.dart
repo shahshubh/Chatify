@@ -1,28 +1,24 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:Chatify/components/chat_detail_page_appbar.dart';
+import 'package:Chatify/components/msg_item.dart';
 import 'package:Chatify/components/sticker_gif.dart';
 import 'package:Chatify/configs/configs.dart';
 import 'package:Chatify/constants.dart';
+import 'package:Chatify/enum/message_type.dart';
+import 'package:Chatify/resources/notification_methods.dart';
 import 'package:Chatify/screens/CallScreens/pickup/pickup_layout.dart';
-import 'package:bubble/bubble.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:Chatify/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:Chatify/widgets/FullImageWidget.dart';
 import 'package:Chatify/widgets/ProgressWidget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:focused_menu/focused_menu.dart';
-import 'package:focused_menu/modals.dart';
 import 'package:giphy_picker/giphy_picker.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:popup_menu/popup_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 class Chat extends StatelessWidget {
   final String receiverId;
@@ -196,52 +192,7 @@ class ChatScreenState extends State<ChatScreen> {
     } else {
       chatId = '$receiverId-$id';
     }
-
-    Firestore.instance
-        .collection("Users")
-        .document(id)
-        .updateData({'chattingWith': receiverId});
     setState(() {});
-  }
-
-  Future<bool> callOnFcmApiSendPushNotifications(
-      String userToken, String body, String image) async {
-    // print("SENDING PUSH NOTIFICATION");
-    final postUrl = 'https://fcm.googleapis.com/fcm/send';
-    final data = {
-      "notification": {
-        "body": "$body",
-        "title": "${preferences.getString('name')}",
-        "image": image
-      },
-      "priority": "high",
-      "data": {
-        "click_action": "FLUTTER_NOTIFICATION_CLICK",
-        "id": "1",
-        "status": "done"
-      },
-      "to": "$userToken"
-    };
-
-    final headers = {
-      'content-type': 'application/json',
-      'Authorization': "key=$FCM_SERVER_KEY" // 'key=YOUR_SERVER_KEY'
-    };
-
-    final response = await http.post(postUrl,
-        body: jsonEncode(data),
-        // encoding: Encoding.getByName('utf-8'),
-        headers: headers);
-
-    if (response.statusCode == 200) {
-      // on success do sth
-      // print('test ok push CFM');
-      return true;
-    } else {
-      // print(' CFM error');
-      // on failure do sth
-      return false;
-    }
   }
 
   onFocusChange() {
@@ -367,8 +318,14 @@ class ChatScreenState extends State<ChatScreen> {
                   listMessage = snapshot.data.documents;
                   return ListView.builder(
                     padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) =>
-                        createItem(index, snapshot.data.documents[index]),
+                    itemBuilder: (context, index) => MessageItem(
+                        index: index,
+                        document: snapshot.data.documents[index],
+                        listMessage: listMessage,
+                        currUserId: id,
+                        receiverAvatar: receiverAvatar,
+                        context: context,
+                        onDeleteMsg: onDeleteMsg),
                     itemCount: snapshot.data.documents.length,
                     reverse: true,
                     controller: listScrollController,
@@ -387,7 +344,7 @@ class ChatScreenState extends State<ChatScreen> {
         .document(document['timestamp']);
     if (document['timestamp'] == listMessage[0]['timestamp']) {
       //check type of document if image delete from storage
-      if (document['type'] == 1) {
+      if (document['type'] == Utils.msgToNum(MessageType.Image)) {
         FirebaseStorage.instance
             .getReferenceFromUrl(document["content"])
             .then((res) {
@@ -397,7 +354,7 @@ class ChatScreenState extends State<ChatScreen> {
       // 𝘛𝘩𝘪𝘴 𝘮𝘦𝘴𝘴𝘢𝘨𝘦 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥
       docRef.updateData({
         "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘴𝘨 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
-        "type": -1,
+        "type": Utils.msgToNum(MessageType.Deleted)
       });
       //change content and type of document
       //change from chatlist as well on both sides
@@ -408,7 +365,7 @@ class ChatScreenState extends State<ChatScreen> {
           .document(receiverId)
           .updateData({
         "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘴𝘨 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
-        "type": -1,
+        "type": Utils.msgToNum(MessageType.Deleted),
       });
 
       Firestore.instance
@@ -418,10 +375,13 @@ class ChatScreenState extends State<ChatScreen> {
           .document(id)
           .updateData({
         "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘴𝘨 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
-        "type": -1,
+        "type": Utils.msgToNum(MessageType.Deleted),
       });
     } else {
-      if (document['type'] == 1) {
+      //else
+      //check type of document if image delete from storage getref from imageurl
+      //change content and type of document
+      if (document['type'] == Utils.msgToNum(MessageType.Image)) {
         FirebaseStorage.instance
             .getReferenceFromUrl(document["content"])
             .then((res) {
@@ -430,623 +390,8 @@ class ChatScreenState extends State<ChatScreen> {
       }
       docRef.updateData({
         "content": "🚫 𝘛𝘩𝘪𝘴 𝘮𝘴𝘨 𝘸𝘢𝘴 𝘥𝘦𝘭𝘦𝘵𝘦𝘥",
-        "type": -1,
+        "type": Utils.msgToNum(MessageType.Deleted),
       });
-    }
-    //else
-    //check type of document if image delete from storage getref from imageurl
-    //change content and type of document
-  }
-
-  //clear all chat(){}
-
-  bool isLastMsgLeft(int index) {
-    if ((index > 0 && listMessage != null) &&
-            listMessage[index - 1]["idFrom"] == id ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool isLastMsgRight(int index) {
-    if ((index > 0 && listMessage != null) &&
-            listMessage[index - 1]["idFrom"] != id ||
-        index == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool isNewMsg(int index) {
-    if (index == (listMessage.length - 1)) {
-      return true;
-    }
-    DateTime curr = DateTime.fromMillisecondsSinceEpoch(
-        int.parse(listMessage[index]["timestamp"]));
-    DateTime prev = DateTime.fromMillisecondsSinceEpoch(
-        int.parse(listMessage[index + 1]["timestamp"]));
-    if (curr.year == prev.year &&
-        curr.month == prev.month &&
-        curr.day == prev.day) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  bool isToday(int index) {
-    DateTime today = DateTime.now();
-    DateTime curr = DateTime.fromMillisecondsSinceEpoch(
-        int.parse(listMessage[index]["timestamp"]));
-    if (curr.day == today.day) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool isYesterday(int index) {
-    DateTime today = DateTime.now();
-    DateTime curr = DateTime.fromMillisecondsSinceEpoch(
-        int.parse(listMessage[index]["timestamp"]));
-    if (curr.day == (today.day - 1)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  Widget createItem(int index, DocumentSnapshot document) {
-    //Logged User Messages - right side
-    if (document["idFrom"] == id) {
-      return Container(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            isNewMsg(index)
-                ? Bubble(
-                    margin: BubbleEdges.only(top: 20, bottom: 20),
-                    alignment: Alignment.center,
-                    color: Color.fromRGBO(212, 234, 244, 1.0),
-                    child: Text(
-                        isToday(index)
-                            ? "TODAY"
-                            : isYesterday(index)
-                                ? "YESTERDAY"
-                                : DateFormat("dd MMMM yyy").format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document["timestamp"]))),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 11.0)),
-                  )
-                : Container(),
-
-            Row(
-              children: [
-                document["type"] == -1
-                    ? Container(
-                        child: Bubble(
-                        padding: BubbleEdges.all(10),
-                        margin: BubbleEdges.only(top: 5),
-                        alignment: Alignment.topRight,
-                        // nip: BubbleNip.rightTop,
-                        color: kPrimaryColor,
-                        child: Row(
-                          children: [
-                            Container(
-                              constraints: BoxConstraints(
-                                  maxWidth:
-                                      MediaQuery.of(context).size.width * 0.4),
-                              child: Text(
-                                document["content"],
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.0, top: 5.0),
-                              child: Text(
-                                DateFormat("hh:mm aa").format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document["timestamp"]))),
-                                style: TextStyle(
-                                    color: Colors.white54,
-                                    fontSize: 12.0,
-                                    fontStyle: FontStyle.italic),
-                              ),
-                            )
-                          ],
-                        ),
-                      ))
-
-                    // Text Msg
-                    : FocusedMenuHolder(
-                        blurSize: 0,
-                        menuWidth: MediaQuery.of(context).size.width * 0.5,
-                        duration: Duration(milliseconds: 200),
-                        onPressed: () {},
-                        bottomOffsetHeight: 100,
-                        menuItems: <FocusedMenuItem>[
-                          FocusedMenuItem(
-                              title: Text(
-                                "Delete",
-                                style: TextStyle(color: Colors.redAccent),
-                              ),
-                              trailingIcon: Icon(
-                                Icons.delete,
-                                color: Colors.redAccent,
-                              ),
-                              onPressed: () {
-                                onDeleteMsg(document);
-                              }),
-                        ],
-                        child: Container(
-                          child: document["type"] == 0
-                              ? Bubble(
-                                  padding: BubbleEdges.all(10),
-                                  margin: BubbleEdges.only(top: 5),
-                                  alignment: Alignment.topRight,
-                                  // nip: BubbleNip.rightTop,
-                                  color: kPrimaryColor,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        constraints: BoxConstraints(
-                                            maxWidth: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.4),
-                                        child: Text(
-                                          document["content"],
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 10.0, top: 5.0),
-                                        child: Text(
-                                          DateFormat("hh:mm aa").format(DateTime
-                                              .fromMillisecondsSinceEpoch(
-                                                  int.parse(
-                                                      document["timestamp"]))),
-                                          style: TextStyle(
-                                              color: Colors.white54,
-                                              fontSize: 12.0,
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-
-                              // Image Msg
-                              : document["type"] == 1
-                                  ? Container(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      FullPhoto(
-                                                          url: document[
-                                                              "content"])));
-                                        },
-                                        child: Material(
-                                          child: CachedNetworkImage(
-                                            placeholder: (context, url) =>
-                                                Container(
-                                              child: CircularProgressIndicator(
-                                                valueColor:
-                                                    AlwaysStoppedAnimation(
-                                                        kPrimaryColor),
-                                              ),
-                                              width: 200.0,
-                                              height: 200.0,
-                                              padding: EdgeInsets.all(70.0),
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0)),
-                                            ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Material(
-                                              child: Image.asset(
-                                                "images/img_not_available.jpeg",
-                                                width: 200.0,
-                                                height: 200.0,
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              clipBehavior: Clip.hardEdge,
-                                            ),
-                                            imageUrl: document["content"],
-                                            width: 200.0,
-                                            height: 200.0,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          borderRadius:
-                                              BorderRadius.circular(8.0),
-                                          clipBehavior: Clip.hardEdge,
-                                        ),
-                                        // onPressed: () {
-                                        //   Navigator.push(
-                                        //       context,
-                                        //       MaterialPageRoute(
-                                        //           builder: (context) => FullPhoto(
-                                        //               url: document["content"])));
-                                        // },
-                                      ),
-                                      // margin: EdgeInsets.only(bottom: 10.0),
-                                    )
-
-                                  // GIF Msg
-                                  : document["type"] == 2
-                                      ? Container(
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          FullPhoto(
-                                                              url: document[
-                                                                  "content"])));
-                                            },
-                                            child: Material(
-                                              child: CachedNetworkImage(
-                                                placeholder: (context, url) =>
-                                                    Container(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    valueColor:
-                                                        AlwaysStoppedAnimation(
-                                                            kPrimaryColor),
-                                                  ),
-                                                  width: 200.0,
-                                                  height: 200.0,
-                                                  padding: EdgeInsets.all(70.0),
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0)),
-                                                ),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Material(
-                                                  child: Image.asset(
-                                                    "images/img_not_available.jpeg",
-                                                    width: 200.0,
-                                                    height: 200.0,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  clipBehavior: Clip.hardEdge,
-                                                ),
-                                                imageUrl: document["content"],
-                                                width: 200.0,
-                                                height: 200.0,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-
-                                          // child: Image.network(
-                                          //   document['content'],
-                                          //   headers: {'accept': 'image/*'},
-                                          //   width: 200.0,
-                                          //   height: 200.0,
-                                          // ),
-                                          // child: Image.asset(
-                                          //   "images/${document['content']}.gif",
-                                          //   width: 100.0,
-                                          //   height: 100.0,
-                                          //   fit: BoxFit.cover,
-                                          // ),
-                                          // margin: EdgeInsets.only(bottom: 10.0),
-                                        )
-                                      : Container(
-                                          child: Image.asset(
-                                            "images/${document['content']}.gif",
-                                            width: 100.0,
-                                            height: 100.0,
-                                            fit: BoxFit.cover,
-                                          ),
-                                          margin: EdgeInsets.only(bottom: 10.0),
-                                        ),
-                        ),
-                      ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.end,
-            ),
-
-            //MSG TIME
-            document["type"] != 0 && document["type"] != -1
-                ? Container(
-                    child: Text(
-                      DateFormat("hh:mm aa").format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document["timestamp"]))),
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12.0,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    margin: EdgeInsets.only(right: 5.0, top: 10.0, bottom: 5.0),
-                  )
-                : Container()
-          ],
-          crossAxisAlignment: CrossAxisAlignment.end,
-        ),
-        margin: EdgeInsets.only(bottom: 10.0),
-      );
-    }
-
-    //Other User - Left Side
-    else {
-      return Container(
-        child: Column(
-          children: [
-            isNewMsg(index)
-                ? Bubble(
-                    margin: BubbleEdges.only(top: 20, bottom: 20),
-                    alignment: Alignment.center,
-                    color: Color.fromRGBO(212, 234, 244, 1.0),
-                    child: Text(
-                        isToday(index)
-                            ? "TODAY"
-                            : isYesterday(index)
-                                ? "YESTERDAY"
-                                : DateFormat("dd MMMM yyy").format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document["timestamp"]))),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 11.0)),
-                  )
-                : Container(),
-
-            Row(
-              children: [
-                // DISPLAY RECIEVER PROFILE IMAGE
-                isLastMsgLeft(index)
-                    ? Material(
-                        child: CachedNetworkImage(
-                          placeholder: (context, url) => Container(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(kPrimaryColor),
-                            ),
-                            width: 35.0,
-                            height: 35.0,
-                            padding: EdgeInsets.all(10.0),
-                          ),
-                          imageUrl: receiverAvatar,
-                          width: 35.0,
-                          height: 35.0,
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                        clipBehavior: Clip.hardEdge,
-                      )
-                    : Container(
-                        width: 35.0,
-                      ),
-
-                document["type"] == -1
-                    ? Container(
-                        child: Bubble(
-                        padding: BubbleEdges.all(10),
-                        margin: BubbleEdges.only(top: 5),
-                        alignment: Alignment.topRight,
-                        // nip: BubbleNip.rightTop,
-                        color: Colors.grey[200],
-                        child: Row(
-                          children: [
-                            Container(
-                              constraints: BoxConstraints(
-                                  maxWidth:
-                                      MediaQuery.of(context).size.width * 0.4),
-                              child: Text(
-                                document["content"],
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.0, top: 5.0),
-                              child: Text(
-                                DateFormat("hh:mm aa").format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document["timestamp"]))),
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12.0,
-                                    fontStyle: FontStyle.italic),
-                              ),
-                            )
-                          ],
-                        ),
-                      ))
-                    :
-                    // DISPLAY MESSAGES
-                    document["type"] == 0
-                        ? Bubble(
-                            padding: BubbleEdges.all(10),
-                            margin: BubbleEdges.only(top: 5),
-                            alignment: Alignment.topRight,
-                            // nip: BubbleNip.leftTop,
-                            color: Colors.grey[200],
-                            child: Row(
-                              children: [
-                                Container(
-                                  constraints: BoxConstraints(
-                                      maxWidth:
-                                          MediaQuery.of(context).size.width *
-                                              0.4),
-                                  child: Text(
-                                    document["content"],
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 10.0, top: 5.0),
-                                  child: Text(
-                                    DateFormat("hh:mm aa").format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            int.parse(document["timestamp"]))),
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12.0,
-                                        fontStyle: FontStyle.italic),
-                                  ),
-                                ),
-                              ],
-                            ))
-
-                        // Image Msg
-                        : document["type"] == 1
-                            ? Container(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => FullPhoto(
-                                                url: document["content"])));
-                                  },
-                                  child: Material(
-                                    child: CachedNetworkImage(
-                                      placeholder: (context, url) => Container(
-                                        child: CircularProgressIndicator(
-                                          valueColor: AlwaysStoppedAnimation(
-                                              kPrimaryColor),
-                                        ),
-                                        width: 200.0,
-                                        height: 200.0,
-                                        padding: EdgeInsets.all(70.0),
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            borderRadius:
-                                                BorderRadius.circular(8.0)),
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Material(
-                                        child: Image.asset(
-                                          "images/img_not_available.jpeg",
-                                          width: 200.0,
-                                          height: 200.0,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        clipBehavior: Clip.hardEdge,
-                                      ),
-                                      imageUrl: document["content"],
-                                      width: 200.0,
-                                      height: 200.0,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    clipBehavior: Clip.hardEdge,
-                                  ),
-                                  // onPressed: () {
-                                  //   Navigator.push(
-                                  //       context,
-                                  //       MaterialPageRoute(
-                                  //           builder: (context) => FullPhoto(
-                                  //               url: document["content"])));
-                                  // },
-                                ),
-                                // margin: EdgeInsets.only(left: 5.0),
-                              )
-                            : document["type"] == 2
-                                ? Container(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => FullPhoto(
-                                                    url: document["content"])));
-                                      },
-                                      child: Material(
-                                        child: CachedNetworkImage(
-                                          placeholder: (context, url) =>
-                                              Container(
-                                            child: CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation(
-                                                      kPrimaryColor),
-                                            ),
-                                            width: 200.0,
-                                            height: 200.0,
-                                            padding: EdgeInsets.all(70.0),
-                                            decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0)),
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              Material(
-                                            child: Image.asset(
-                                              "images/img_not_available.jpeg",
-                                              width: 200.0,
-                                              height: 200.0,
-                                              fit: BoxFit.cover,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            clipBehavior: Clip.hardEdge,
-                                          ),
-                                          imageUrl: document["content"],
-                                          width: 200.0,
-                                          height: 200.0,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    margin: EdgeInsets.only(left: 10.0),
-                                  )
-                                : Container(
-                                    child: Image.asset(
-                                      "images/${document['content']}.gif",
-                                      width: 100.0,
-                                      height: 100.0,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    margin: EdgeInsets.only(
-                                        bottom: 10.0, right: 10.0),
-                                  )
-              ],
-            ),
-
-            //Msg Time
-            document["type"] != 0 && document["type"] != -1
-                ? Container(
-                    child: Text(
-                      DateFormat("hh:mm aa").format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document["timestamp"]))),
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12.0,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    margin: EdgeInsets.only(left: 40.0, top: 10.0, bottom: 5.0),
-                  )
-                : Container()
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        margin: EdgeInsets.only(bottom: 10.0),
-      );
     }
   }
 
@@ -1066,33 +411,6 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             color: Colors.white,
           ),
-
-          // Material(
-          //   child: Container(
-          //     margin: EdgeInsets.symmetric(horizontal: 1.0),
-          //     child: IconButton(
-          //       icon: Icon(Icons.image),
-          //       color: kPrimaryColor,
-          //       onPressed: getImage,
-          //     ),
-          //   ),
-          //   color: Colors.white,
-          // ),
-          // Material(
-          //   child: Container(
-          //     margin: EdgeInsets.symmetric(horizontal: 1.0),
-          //     child: IconButton(
-          //       icon: Icon(
-          //         Icons.gif,
-          //         size: 40,
-          //       ),
-          //       color: kPrimaryColor,
-          //       onPressed: getGif,
-          //       padding: EdgeInsets.only(bottom: 0.0),
-          //     ),
-          //   ),
-          //   color: Colors.white,
-          // ),
           Flexible(
             child: Container(
               child: TextField(
@@ -1116,7 +434,8 @@ class ChatScreenState extends State<ChatScreen> {
               child: IconButton(
                 icon: Icon(Icons.send),
                 color: kPrimaryColor,
-                onPressed: () => onSendMessage(textEditingController.text, 0),
+                onPressed: () =>
+                    onSendMessage(textEditingController.text, MessageType.Text),
               ),
             ),
             color: Colors.white,
@@ -1134,12 +453,7 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void onSendMessage(String contentMsg, int type) {
-    //type=0 => text Msg
-    //type=1 => Image File
-    //type=2 => GIF
-    //type=3 => Sticker
-
+  void onSendMessage(String contentMsg, MessageType type) {
     setState(() {
       isDisplaySticker = false;
     });
@@ -1147,12 +461,15 @@ class ChatScreenState extends State<ChatScreen> {
     String currTime = DateTime.now().millisecondsSinceEpoch.toString();
 
     if (contentMsg != "") {
-      String body = type == 0
+      String body = type == MessageType.Text
           ? contentMsg
-          : type == 1 ? "Image" : type == 2 ? "GIF" : "Sticker";
-      String image = type == 1 ? contentMsg : "";
+          : type == MessageType.Image
+              ? "Image"
+              : type == MessageType.Gif ? "GIF" : "Sticker";
+      String image = type == MessageType.Image ? contentMsg : "";
 
-      callOnFcmApiSendPushNotifications(recieverFcmToken, body, image);
+      sendPushNotification(
+          preferences.getString('name'), recieverFcmToken, body, image);
       textEditingController.clear();
 
       Firestore.instance
@@ -1163,7 +480,7 @@ class ChatScreenState extends State<ChatScreen> {
           .setData({
         "id": receiverId,
         "content": contentMsg,
-        "type": type,
+        "type": Utils.msgToNum(type),
         "timestamp": currTime,
         "showCheck": true
       }, merge: true);
@@ -1176,7 +493,7 @@ class ChatScreenState extends State<ChatScreen> {
           .setData({
         "id": id,
         "content": contentMsg,
-        "type": type,
+        "type": Utils.msgToNum(type),
         "timestamp": currTime,
         "showCheck": false
       }, merge: true);
@@ -1194,7 +511,7 @@ class ChatScreenState extends State<ChatScreen> {
             "idTo": receiverId,
             "timestamp": currTime,
             "content": contentMsg,
-            "type": type
+            "type": Utils.msgToNum(type)
           },
         );
       });
@@ -1229,7 +546,7 @@ class ChatScreenState extends State<ChatScreen> {
         await GiphyPicker.pickGif(context: context, apiKey: GIPHY_API_KEY);
 
     if (gif != null) {
-      onSendMessage(gif.images.original.url, 2);
+      onSendMessage(gif.images.original.url, MessageType.Gif);
       print(gif.images.original.url);
     }
   }
@@ -1247,7 +564,7 @@ class ChatScreenState extends State<ChatScreen> {
       imageUrl = downloadUrl;
       setState(() {
         isLoading = false;
-        onSendMessage(imageUrl, 1);
+        onSendMessage(imageUrl, MessageType.Image);
       });
     }, onError: (error) {
       setState(() {

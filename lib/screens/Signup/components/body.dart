@@ -82,7 +82,6 @@ class _SignUpState extends State<SignUp> {
           "name": nameEditingController.text,
           "photoUrl": defaultPhotoUrl,
           "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
-          "chattingWith": null,
           "state": 1,
           "lastSeen": DateTime.now().millisecondsSinceEpoch.toString(),
           "fcmToken": fcmToken
