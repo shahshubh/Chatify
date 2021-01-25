@@ -6,7 +6,7 @@ import 'package:Chatify/components/chat_detail_page_appbar.dart';
 import 'package:Chatify/components/sticker_gif.dart';
 import 'package:Chatify/configs/configs.dart';
 import 'package:Chatify/constants.dart';
-import 'package:Chatify/screens/CallScreens/pickup/pickup_layout.dart';
+// import 'package:Chatify/screens/CallScreens/pickup/pickup_layout.dart';
 import 'package:bubble/bubble.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,9 +45,7 @@ class Chat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PickupLayout(
-      uid: currUserId,
-      scaffold: Scaffold(
+    return  Scaffold(
         appBar: ChatDetailPageAppBar(
           receiverName: receiverName,
           receiverAvatar: receiverAvatar,
@@ -60,8 +58,7 @@ class Chat extends StatelessWidget {
           receiverId: receiverId,
           receiverAvatar: receiverAvatar,
         ),
-      ),
-    );
+      );
   }
 }
 

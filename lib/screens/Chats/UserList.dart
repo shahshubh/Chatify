@@ -80,22 +80,36 @@ class _UserListState extends State<UserList> {
                     width: MediaQuery.of(context).copyWith().size.width,
                   );
                 } else {
+                  // print("before");
                   snapshot.data.documents
                       .removeWhere((i) => i["uid"] == currentuserid);
+                  
                   allUsersList = snapshot.data.documents;
+                  // print("type1 ${allUsersList.runtimeType} ${allUsersList.length}");
+                  // for(int i=0;i<snapshot.data.docs.length;i++){
+                  //   print(snapshot.data.docs[i].data()["name"]);
+                  //   // print("all:userlist $allUsersList");
+                  // }
+                  allUsersList.removeWhere((i) => i.data["uid"] == currentuserid);
+                  // print("type2 ${allUsersList.runtimeType} ${allUsersList.length}");
+                  // for(int i=0;i<snapshot.data.docs.length;i++){
+                  //   print(snapshot.data.docs[i].data()["name"]);
+                  //   // print("all:userlist $allUsersList");
+                  // }
+                  // print("after ${allUsersList.runtimeType}");
                   return ListView.builder(
                     padding: EdgeInsets.only(top: 16),
-                    itemCount: snapshot.data.documents.length,
+                    itemCount: allUsersList.length,
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return ChatUsersList(
-                        name: snapshot.data.documents[index]["name"],
-                        image: snapshot.data.documents[index]["photoUrl"],
-                        time: snapshot.data.documents[index]["createdAt"],
-                        email: snapshot.data.documents[index]["email"],
+                        name: allUsersList[index]["name"],
+                        image: allUsersList[index]["photoUrl"],
+                        time: allUsersList[index]["createdAt"],
+                        email: allUsersList[index]["email"],
                         isMessageRead: true,
-                        userId: snapshot.data.documents[index]["uid"],
+                        userId: allUsersList[index]["uid"],
                       );
                     },
                   );

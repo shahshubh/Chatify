@@ -45,6 +45,8 @@ dependencies:
   flutter_ringtone_player: ^2.0.0
   focused_menu: ^1.0.1
   splash_screen_view: ^1.0.1
+  provider:
+  firebase:
 
 dev_dependencies:
   flutter_launcher_icons: "^0.8.0"

@@ -72,8 +72,7 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
         } else {
           return InkWell(
             onTap: () {
-              // print(widget.data["content"]);
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
+              Navigator.push(context,new MaterialPageRoute(builder: (context) {
                 return Chat(
                   receiverId: snapshot.data["uid"],
                   receiverAvatar: snapshot.data["photoUrl"],
