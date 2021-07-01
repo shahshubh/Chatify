@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Chatify/configs/configs.dart';
 import 'package:Chatify/models/group.dart';
+import 'package:Chatify/widgets/DialogBox.dart';
 import 'package:Chatify/widgets/ProgressWidget.dart';
 import 'package:Chatify/constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,16 +19,142 @@ class NewGroupPageAppBar extends StatelessWidget {
   final List participants;
   final bool edit;
   final Groups group;
+  final currentuserid;
   String title = "Create";
   NewGroupPageAppBar({
     this.participants,
     this.edit,
     this.group,
+    this.currentuserid,
   });
+
+  void deleteGroup() async{
+    await Firestore.instance
+      .document('Groups/${group.gid}/')
+      .delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     if(edit == true) title = "Update";
-    return Scaffold(
+    print("hello hii");
+    print(group.admin);
+    print(currentuserid);
+    if (group.admin.contains(currentuserid) && edit==true){
+      print(group.admin);
+      print("admin");
+      return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "$title Group",
+          style: TextStyle(
+              fontFamily: 'Courgette', letterSpacing: 1.25, fontSize: 24),
+        ),
+        backgroundColor: kPrimaryColor,
+        actions: [
+          FlatButton.icon(
+            onPressed: () async {
+              try {
+                var x = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return DialogBox(
+                        title: "Confirmation",
+                        buttonText1: 'Yes',
+                        button1Func: () {
+                          Navigator.of(context).pop("Yes");
+                        },
+                        buttonText2: 'No',
+                        button2Func: () {
+                          Navigator.of(context).pop("No");
+                        },
+                        icon: Icons.delete,
+                        description:
+                            'Do you want permanently delete this group?',
+                        iconColor: Colors.red,
+                      );
+                    });
+                if (x == "Yes") {
+                  // await DatabaseService().deleteGroup(widget.group.gid);
+                  await deleteGroup();
+                  await showDialog(
+                      context: context,
+                      builder: (context) {
+                        return DialogBox(
+                          title: "Successful",
+                          buttonText1: 'Ok',
+                          button1Func: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icons.check,
+                          description: 'Group Deleted!',
+                        );
+                      });
+                  var count = 0;
+                  Navigator.popUntil(context, (route) {
+                    return count++ == 2;
+                  });
+                }
+              } on Exception catch (e) {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return DialogBox(
+                        // title: e.code.toUpperCase(),
+                        title: "Exception",
+                        buttonText1: 'Ok',
+                        button1Func: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icons.clear,
+                        // description: e.message,
+                        description: "Firebase Exception",
+                        iconColor: Colors.red,
+                      );
+                    });
+              } catch (e) {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return DialogBox(
+                        title: e.code.toUpperCase(),
+                        buttonText1: 'Ok',
+                        button1Func: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icons.clear,
+                        description: e.message,
+                        iconColor: Colors.red,
+                      );
+                    });
+              }
+            },
+
+            icon: Icon(
+              Icons.delete,
+              color: Colors.red,
+              size: 27.0,
+            ),
+            label: Container(),
+            // label: Text(
+            //   'Delete',
+            //   style: TextStyle(
+            //     fontFamily: 'Segoe UI',
+            //     fontSize: 17,
+            //     color: const Color(0xffffffff),
+            //     fontWeight: FontWeight.w600,
+            //   ),
+            // )
+          ),
+        ],
+        centerTitle: true,
+      ),
+      body: NewGroupPage(participants: participants,edit: edit,group: group),
+    );
+
+    }
+    else{
+      return Scaffold(
       appBar: AppBar(
         title: Text(
           "$title Group",
@@ -45,6 +172,8 @@ class NewGroupPageAppBar extends StatelessWidget {
       ),
       body: NewGroupPage(participants: participants,edit: edit,group: group),
     );
+    }
+    
   }
 }
 

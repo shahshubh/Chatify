@@ -162,7 +162,7 @@ class _ShowGroupsState extends State<ShowGroups> {
 
   Widget secondaryText(){
     String last_Sender ;
-    widget.group.lastSender == currentusername ? last_Sender = "You : " : last_Sender = widget.group.lastSender; 
+    widget.group.lastSender == currentusername ? last_Sender = "You" : last_Sender = widget.group.lastSender; 
     // print("1");
     if(widget.group.lastMessage == null || widget.group.lastMessage == "" ){
       // print("2 ${widget.group.lastMessage}");
@@ -190,7 +190,7 @@ class _ShowGroupsState extends State<ShowGroups> {
           text:
             TextSpan(children: [
               TextSpan(
-              text: "$last_Sender" ,
+              text: "$last_Sender: " ,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey.shade500

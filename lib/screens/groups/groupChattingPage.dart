@@ -91,6 +91,7 @@ class _GroupChatState extends State<GroupChat> {
                       builder: (context) => NewGroupPageAppBar(
                         group: passingGroup,
                         edit : true,
+                        currentuserid : currentuserid,
                       ),
                     ),
                   );
