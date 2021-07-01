@@ -37,10 +37,7 @@ class NewGroupPageAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if(edit == true) title = "Update";
-    print("hello hii");
-    print(group.admin);
-    print(currentuserid);
-    if (group.admin.contains(currentuserid) && edit==true){
+    if ( edit==true  && group.admin.contains(currentuserid) ){
       print(group.admin);
       print("admin");
       return Scaffold(
