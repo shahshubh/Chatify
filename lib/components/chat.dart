@@ -33,7 +33,7 @@ class _ChatUsersListState extends State<ChatUsersList> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // implement initState
     super.initState();
     getCurrUser();
   }

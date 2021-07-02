@@ -28,15 +28,33 @@ class NewGroupPageAppBar extends StatelessWidget {
     this.currentuserid,
   });
 
-  void deleteGroup() async{
+  void deleteGroup() async{   
+    //delete gid doc from groups collection                   
     await Firestore.instance
       .document('Groups/${group.gid}/')
-      .delete();
+      .delete().then((value) async {
+        // await Fluttertoast.showToast(
+        //       msg: "Group Deleted successfully");
+      },onError: (errorMsg) async{
+        await Fluttertoast.showToast(
+              msg: "Error Deleting Group !");
+      });
+
+    // delete profile image with gid 
+    final firebase_storage.StorageReference storageReference =
+        firebase_storage.FirebaseStorage.instance.ref().child("group_profile_Images").child(group.gid);
+    storageReference.delete().then((value) => {
+      print("Profile image deleted")
+    },onError: (errormsg) async{
+      await Fluttertoast.showToast(
+              msg: "Error occured in deleting Profile Url !");
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     if(edit == true) title = "Update";
+    // for updating group for admin
     if ( edit==true  && group.admin.contains(currentuserid) ){
       print(group.admin);
       print("admin");
@@ -129,7 +147,7 @@ class NewGroupPageAppBar extends StatelessWidget {
 
             icon: Icon(
               Icons.delete,
-              color: Colors.red,
+              color: Colors.white,
               size: 27.0,
             ),
             label: Container(),
@@ -213,7 +231,7 @@ class NewGroupPageState extends State<NewGroupPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // implement initState
     super.initState();
     readDataFromLocal();
     print('create group : ${widget.participants}');
@@ -249,7 +267,7 @@ class NewGroupPageState extends State<NewGroupPage> {
 
    Future<bool> callOnFcmApiSendPushNotifications(
       String userToken, String body, String image) async {
-    print("SENDING PUSH NOTIFICATION to ${userToken}");
+    print("SENDING PUSH NOTIFICATION to $userToken");
     final postUrl = 'https://fcm.googleapis.com/fcm/send';
     final data = {
       "notification": {
@@ -343,7 +361,7 @@ class NewGroupPageState extends State<NewGroupPage> {
 
   void createGroup() async{
     List admin = [];
-    print("current user id ${currentuserid}");
+    print("current user id $currentuserid");
     nameFocusNode.unfocus();
     descriptionFocusNode.unfocus();
     setState(() {
@@ -428,6 +446,7 @@ class NewGroupPageState extends State<NewGroupPage> {
     });
   }
 
+  // decide whether to update group or create group
   void decide(){
     if(widget.edit == true) updateGroup();
     else createGroup();

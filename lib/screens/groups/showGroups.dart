@@ -29,7 +29,6 @@ class _ShowGroupsState extends State<ShowGroups> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getCurrUser();
   }

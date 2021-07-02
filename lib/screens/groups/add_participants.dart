@@ -42,7 +42,7 @@ class _AddParticipantsPageState extends State<AddParticipantsPage> {
         participants.add(widget.group.users[i]);
         // admin.add(widget.group.admin[i]);
       }
-    };
+    }
     // check();
   }
 
@@ -147,15 +147,15 @@ class _AddParticipantsPageState extends State<AddParticipantsPage> {
               },
             ),
       bottomNavigationBar: GestureDetector(
-        onTap: () {
+        onTap: widget.group.admin.contains(currentuserid)? () {
           if(!participants.contains(currentuserid))  participants.add(currentuserid);
           return decide();
           
           
-        },
+        } : null,
         child: Container(
           height: 50,
-          color: Color(0xFF6B249C),
+          color: widget.group.admin.contains(currentuserid)? Color(0xFF6B249C) : Colors.black38,
           child: Center(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

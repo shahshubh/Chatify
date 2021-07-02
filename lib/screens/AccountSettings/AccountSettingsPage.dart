@@ -61,7 +61,7 @@ class SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // implement initState
     super.initState();
     readDataFromLocal();
   }

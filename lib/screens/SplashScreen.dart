@@ -29,7 +29,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // animationController = new AnimationController(
     //     vsync: this, duration: new Duration(seconds: 3));

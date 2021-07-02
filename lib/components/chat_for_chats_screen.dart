@@ -23,7 +23,7 @@ class _ChatChatsScreenState extends State<ChatChatsScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // implement initState
     super.initState();
     getCurrUser();
   }

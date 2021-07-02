@@ -111,7 +111,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // implement initState
     super.initState();
     focusNode.addListener(onFocusChange);
     isDisplaySticker = false;

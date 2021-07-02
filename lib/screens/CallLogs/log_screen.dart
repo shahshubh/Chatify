@@ -14,7 +14,7 @@ class _LogScreenState extends State<LogScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // implement initState
     super.initState();
     getCurrUserId();
   }

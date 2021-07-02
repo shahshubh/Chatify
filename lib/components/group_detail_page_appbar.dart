@@ -116,6 +116,6 @@ class GroupChatDetailPageAppBar extends StatelessWidget
   }
 
   @override
-  // TODO: implement preferredSize
+  // implement preferredSize
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }

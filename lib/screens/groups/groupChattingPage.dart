@@ -61,7 +61,6 @@ class _GroupChatState extends State<GroupChat> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getCurrUser();
   }
@@ -177,31 +176,32 @@ class _GroupChatState extends State<GroupChat> {
                   }
                 },                  
               ),
+        
+      ]: [
         IconButton(
-
-                icon: Icon(
-                  // Icons.video_call,
-                  Icons.add,
-                  color: Colors.grey.shade700,
-                ),
-                onPressed: () async {
-                  final result =await  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      // builder: (context) => NewGroupPageAppBar(),
-                      builder: (context) => AddParticipantsPage(group: passingGroup,edit: true,),
-                    ),
-                  );
-
-                  if(result != null){
-                    setState(() {
-                      passingGroup = result;
-                      // print("new length ${passingGroup.users.length}");
-                    });
-                  }
-                },                  
+          icon: Icon(
+            // Icons.video_call,
+            Icons.add,
+            color: Colors.grey.shade700,
+          ),
+          onPressed: () async {
+            final result =await  Navigator.push(
+              context,
+              MaterialPageRoute(
+                // builder: (context) => NewGroupPageAppBar(),
+                builder: (context) => AddParticipantsPage(group: passingGroup,edit: true,),
               ),
-      ]: [Container()],
+            );
+
+            if(result != null){
+              setState(() {
+                passingGroup = result;
+                // print("new length ${passingGroup.users.length}");
+              });
+            }
+          },                  
+        ),
+      ],
     );
   }
 
@@ -278,7 +278,7 @@ class GroupChatScreenState extends State<GroupChatScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    // implement dispose
     super.dispose();
     _textEditingController.dispose();
     _listScrollController.dispose();
@@ -286,7 +286,7 @@ class GroupChatScreenState extends State<GroupChatScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // implement initState
     super.initState();
     focusNode.addListener(onFocusChange);
     isDisplaySticker = false;
