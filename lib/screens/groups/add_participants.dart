@@ -147,7 +147,7 @@ class _AddParticipantsPageState extends State<AddParticipantsPage> {
               },
             ),
       bottomNavigationBar: GestureDetector(
-        onTap: widget.group.admin.contains(currentuserid)? () {
+        onTap: (bottomtext=="Proceed" || (widget.edit==true && widget.group.admin.contains(currentuserid)))? () {
           if(!participants.contains(currentuserid))  participants.add(currentuserid);
           return decide();
           
@@ -155,7 +155,7 @@ class _AddParticipantsPageState extends State<AddParticipantsPage> {
         } : null,
         child: Container(
           height: 50,
-          color: widget.group.admin.contains(currentuserid)? Color(0xFF6B249C) : Colors.black38,
+          color:(bottomtext=="Proceed" || (widget.edit==true && widget.group.admin.contains(currentuserid)))? Color(0xFF6B249C) : Colors.black38,
           child: Center(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

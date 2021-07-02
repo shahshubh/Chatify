@@ -176,6 +176,29 @@ class _GroupChatState extends State<GroupChat> {
                   }
                 },                  
               ),
+        IconButton(
+          icon: Icon(
+            // Icons.video_call,
+            Icons.add,
+            color: Colors.grey.shade700,
+          ),
+          onPressed: () async {
+            final result =await  Navigator.push(
+              context,
+              MaterialPageRoute(
+                // builder: (context) => NewGroupPageAppBar(),
+                builder: (context) => AddParticipantsPage(group: passingGroup,edit: true,),
+              ),
+            );
+
+            if(result != null){
+              setState(() {
+                passingGroup = result;
+                // print("new length ${passingGroup.users.length}");
+              });
+            }
+          },                  
+        ),
         
       ]: [
         IconButton(
