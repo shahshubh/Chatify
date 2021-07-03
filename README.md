@@ -73,7 +73,21 @@ Chat Application in flutter.
 <img height=480 width=240 style="margin: 10px;" src="./ss/8.jpg"/>
 <!-- <img height=480 width=240 style="margin: 10px;" src="./ss/9.jpg"/> -->
 
+
+## Groups
+
+<h4 align="center">&nbsp&nbsp Add Admin &nbsp&nbsp&nbsp&nbsp | &nbsp&nbsp&nbsp&nbsp Group Details &nbsp&nbsp&nbsp&nbsp | &nbsp&nbsp&nbsp&nbsp Add Participants &nbsp&nbsp&nbsp&nbsp</h4>
+<img height=480 width=240 style="margin: 10px;" src="./ss/add_admin_page.png"/>
+<img height=480 width=240 style="margin: 10px;" src="./ss/group_details_page.png"/>
+<img height=480 width=240 style="margin: 10px;" src="./ss/add_participants_page.png"/>
+
+<h4 align="center">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp All groups &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp | &nbsp&nbsp&nbsp&nbsp Group Chating page &nbsp&nbsp&nbsp&nbsp </h4>
+
+<img height=480 width=240 style="margin: 10px;" src="./ss/all_groups_page.png"/>
+<img height=480 width=240 style="margin: 10px;" src="./ss/group_chating_page.png"/>
+
 </div>
+
 
 
 ## Stargazers
